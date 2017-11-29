@@ -1,0 +1,23 @@
+{
+	"name": "sellastica/data-grid",
+	"type": "project",
+	"homepage": "https://github.com/sellastica/data-grid",
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "Tomáš Krejčí",
+			"homepage": "http://www.sellastica.com"
+		}
+	],
+	"require": {
+		"php": ">=7.1",
+		"sellastica/entity": "^1.0"
+	},
+	"require-dev": {
+	},
+	"autoload": {
+		"psr-4": {
+			"Sellastica\\DataGrid\\": "src/"
+		}
+	}
+}

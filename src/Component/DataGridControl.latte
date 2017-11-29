@@ -1,0 +1,138 @@
+{* search tabs *}
+{control searchTabs}
+
+<div class="list-header">
+	<div class="row align-middle">
+		<div class="column small-12 medium-6 large-4">
+			{* search form *}
+			{if $grid->displaySearchForm()}
+				{control searchForm}
+			{/if}
+
+			{* item filter *}
+			{if $presenter->getComponent('itemFilter', false)}
+				<div class="dropdown-pane large" id="search-dropdown" data-dropdown data-v-offset="10"
+					 data-position-class="bottom">
+					<div class="dropdown-pane-in">
+						{$presenter->getComponent('itemFilter')->render()}
+					</div>
+				</div>
+			{/if}
+		</div>
+
+		{* search tags *}
+		{control searchTags}
+	</div>
+</div>
+
+<div class="list-body">
+	{if $grid->hasRows()}
+		{* table *}
+		<div class="table-scroll">
+			<table class="list-table hover">
+				<colgroup>
+					{foreach $grid->getHeader()->getColumns() as $column}
+						<col/>
+					{/foreach}
+				</colgroup>
+				<thead>
+				<tr>
+					{* bulk actions *}
+					{if $grid->getBulkActions()}
+						<th class="select {$column->getClass()}">
+							{* bulk actions *}
+							<div class="bulk-actions">
+								<ul>
+									{* main bulk checkbox *}
+									<li class="has-checkbox">
+										<label class="control input-checkbox">
+											<input type="checkbox" class="main-bulk-checkbox">
+											<span class="control-indicator"></span>
+											<span class="if-visible"><span
+														class="checked-items-count">0</span> {_admin.data_grid.items_count_suffix}</span>
+											<i class="fa fa-angle-down if-hidden"></i>
+										</label>
+									</li>
+									{* all pages bulk *}
+									<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+										<label class="control input-checkbox">
+											<input type="checkbox"/>
+											<span class="control-indicator"></span>
+											{_admin.data_grid.all_pages}
+										</label>
+									</li>
+									{* bulk actions menu *}
+									<li class="if-visible hover bulk-actions-button">
+										<a data-toggle="bulk-actions-dropdown">{_admin.data_grid.bulk_actions} <i
+													class="fa fa-angle-down"></i></a>
+										<ul class="menu dropdown-pane button-dropdown bottom no-padding bulk-menu"
+											data-dropdown
+											data-close-on-click="true"
+											data-v-offset="10" id="bulk-actions-dropdown">
+											{foreach $grid->getBulkActions() as $action}
+												<li>
+													<a href="{$action[1]}"{if $action[2]} class="confirm"{/if}>{$action[0]}</a>
+												</li>
+											{/foreach}
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</th>
+					{/if}
+
+					{* columns *}
+					{foreach $grid->getHeader()->getColumns() as $column}
+						{if $column->isText()}
+							<th n:class="$column->getClass()">
+								{$column->getTitle()}
+							</th>
+						{elseif $column->isSortable()}
+							<th class="sorting-header{if $column->isVisible()} active{/if} {$column->getClass()}">
+								<a href="{$column->getUrl()}">
+									{$column->getTitle()}
+									{if $column->isVisible()}
+										<i class="fa fa-caret-{$column->isSortAsc() ? 'up' : 'down'} sorting-arr {$column->isSortAsc() ? 'up' : 'down'}"></i>
+									{/if}
+								</a>
+							</th>
+						{/if}
+					{/foreach}
+				</tr>
+				</thead>
+				<tbody>
+				{* grid rows *}
+				{foreach $grid->getRows() as $row}
+					<tr n:class="$row->getClass()">
+						{* bulk actions column *}
+						{if $grid->getBulkActions()}
+							<td class="select">
+								<label class="control input-checkbox">
+									<input type="checkbox" value="{$row->getBulkId()}" class="bulk-checkbox">
+									<div class="control-indicator"></div>
+								</label>
+							</td>
+						{/if}
+
+						{* columns *}
+						{foreach $row->getColumns() as $column}
+							<td n:class="$column->getClass()"{if $column->getColSpan()} colspan="{$column->getColSpan()}"{/if}>
+								{$column|noescape}
+							</td>
+						{/foreach}
+					</tr>
+				{/foreach}
+				</tbody>
+			</table>
+		</div>
+	{else}
+		{* no results found *}
+		<div class="no-results">
+			<i class="fa fa-search"></i>
+			<h2>{_admin.globals.no_results_found_heading}</h2>
+		</div>
+	{/if}
+</div>
+
+{control pagination}
+{control saveSearchForm}

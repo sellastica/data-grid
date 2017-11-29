@@ -1,0 +1,11 @@
+{form searchForm class => 'input-group'}
+	<span class="input-group-label dropdown search-dropdown-trigger" data-toggle="search-dropdown">
+		{if $presenter->getComponent('itemFilter', false)}
+			<span class="filter-button-title">{_admin.globals.buttons.filter}</span>
+			<i class="fa fa-caret-down"></i>
+		{else}
+			<i class="fa fa-search"></i>
+		{/if}
+	</span>
+	{input q class => 'input-group-field', type => 'search'}
+{/form}

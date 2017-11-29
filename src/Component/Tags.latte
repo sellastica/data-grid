@@ -1,0 +1,10 @@
+{if !empty($tags)}
+	<div class="column search-tags">
+		{foreach $tags as $tag}
+			<a href="{$tag->getUrl()}" class="label secondary">
+				{_$tag->getTitle()}: {$tag->getDisplayValue()}
+				<span>&times;</span>
+			</a>
+		{/foreach}
+	</div>
+{/if}

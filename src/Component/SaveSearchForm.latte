@@ -1,0 +1,11 @@
+{capture $modal}
+	{form saveSearchForm}
+		<div class="row columns">
+			{input title}
+		</div>
+		{var $footer = Sellastica\AdminUI\Component\FoundationModal::$footer}
+		{include $footer, remove => false}
+	{/form}
+{/capture}
+{capture $title}{_admin.products.import_products}{/capture}
+{control $presenter['modal'], id => 'save-search-form', title => $title, content => $modal}

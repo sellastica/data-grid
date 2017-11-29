@@ -1,0 +1,25 @@
+{if !empty($tabs)}
+	<ul class="tabs">
+		{foreach $tabs as $tab}
+			<li class="tabs-title {if $tab->isActive()} is-active{/if}{if $tab->isSaveable()} save{/if}">
+				{if $tab->isActive()}
+					{if $tab->isSaveable()}
+						<a data-toggle="save-search-form">
+							<i class="fa fa-bookmark-o"></i>
+							{_admin.globals.buttons.save}...
+						</a>
+					{else}
+						<span aria-selected="true">
+							{$tab->getTitle()}
+						</span>
+					{/if}
+					{if $tab->isDeletable()}
+						<a n:href="remove id => $tab->getId()" class="tab-action">&times;</a>
+					{/if}
+				{else}
+					<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
+				{/if}
+			</li>
+		{/foreach}
+	</ul>
+{/if}
