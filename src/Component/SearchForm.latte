@@ -1,8 +1,13 @@
-{form searchForm class => 'input-group'}
-	<span class="input-group-label dropdown search-dropdown-trigger" data-toggle="search-dropdown">
+{var $formClass = $control->displaySearchInput() ? 'input-group' : null}
+{var $buttonClass = $control->displaySearchInput() ? 'input-group-label' : 'button hollow no-margin-bottom'}
+
+{form searchForm class => $formClass}
+	<span class="{$buttonClass} dropdown search-dropdown-trigger" data-toggle="search-dropdown">
 		{if $presenter->getComponent('itemFilter', false)}
 			<span class="filter-button-title">{_admin.globals.buttons.filter}</span>
-			<i class="fa fa-caret-down"></i>
+			{if $control->displaySearchInput()}
+				<i class="fa fa-caret-down"></i>
+			{/if}
 		{else}
 			<i class="fa fa-search"></i>
 		{/if}
