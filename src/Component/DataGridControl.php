@@ -181,7 +181,7 @@ class DataGridControl extends BaseControl
 	 */
 	protected function createComponentSearchForm(): SearchForm
 	{
-		$control = $this->searchFormFactory->create($this->filterRules);
+		$control = $this->searchFormFactory->create($this->filterRules, !empty($this->dataGrid->getQueryColumns()));
 		$control->onSuccess[] = function (array $params) {
 			$this->onSuccess($params);
 		};

@@ -81,6 +81,14 @@ class DataGrid
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getQueryColumns(): array
+	{
+		return $this->queryColumns;
+	}
+
+	/**
 	 * @param array $columns
 	 * @return $this
 	 */
@@ -95,7 +103,7 @@ class DataGrid
 	 */
 	public function displaySearchForm(): bool
 	{
-		return !empty($this->queryColumns);
+		return !empty($this->queryColumns) || $this->getControl()->getComponent('itemFilter', false);
 	}
 
 	/**

@@ -7,5 +7,7 @@
 			<i class="fa fa-search"></i>
 		{/if}
 	</span>
-	{input q class => 'input-group-field', type => 'search'}
+	{if $control->displaySearchInput()}
+		{input q class => 'input-group-field', type => 'search'}
+	{/if}
 {/form}

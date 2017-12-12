@@ -6,7 +6,7 @@
 		<div class="column small-12 medium-6 large-4">
 			{* search form *}
 			{if $grid->displaySearchForm()}
-				{control searchForm}
+				{control searchForm, grid => $grid}
 			{/if}
 
 			{* item filter *}

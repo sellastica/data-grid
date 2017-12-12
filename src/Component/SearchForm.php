@@ -25,10 +25,13 @@ class SearchForm extends BaseControl
 	private $filterRules;
 	/** @var IAdminFilterRepository */
 	private $adminFilterRepository;
+	/** @var bool */
+	private $displaySearchInput;
 
 
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $filterRules
+	 * @param bool $displaySearchInput
 	 * @param IAdminFilterRepository $adminFilterRepository
 	 * @param Nette\Security\User $user
 	 * @param \Sellastica\UI\Form\FormFactory $formFactory
@@ -36,6 +39,7 @@ class SearchForm extends BaseControl
 	 */
 	public function __construct(
 		FilterRuleCollection $filterRules,
+		bool $displaySearchInput,
 		IAdminFilterRepository $adminFilterRepository,
 		Nette\Security\User $user,
 		FormFactory $formFactory,
@@ -43,10 +47,11 @@ class SearchForm extends BaseControl
 	)
 	{
 		parent::__construct();
+		$this->filterRules = $filterRules;
+		$this->displaySearchInput = $displaySearchInput;
 		$this->user = $user;
 		$this->formFactory = $formFactory;
 		$this->entityManager = $entityManager;
-		$this->filterRules = $filterRules;
 		$this->adminFilterRepository = $adminFilterRepository;
 	}
 
@@ -86,6 +91,14 @@ class SearchForm extends BaseControl
 
 		$this->filterRules->addQuery($values->q);
 		$this->onSuccess($params);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function displaySearchInput(): bool
+	{
+		return $this->displaySearchInput;
 	}
 
 	/**
