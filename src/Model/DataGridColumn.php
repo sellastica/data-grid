@@ -9,7 +9,7 @@ class DataGridColumn
 	const TYPE_STANDARD = 1,
 		TYPE_BUTTON_GROUP = 2;
 
-	/** @var string */
+	/** @var string|null */
 	private $class;
 	/** @var array */
 	private $content = [];
@@ -17,6 +17,8 @@ class DataGridColumn
 	private $type = self::TYPE_STANDARD;
 	/** @var int|null */
 	private $colSpan;
+	/** @var int|null */
+	private $width;
 
 
 	/**
@@ -31,7 +33,7 @@ class DataGridColumn
 	 * @param int $type
 	 * @return $this
 	 */
-	public function setType(int $type)
+	public function setType(int $type): DataGridColumn
 	{
 		$this->type = $type;
 		return $this;
@@ -41,7 +43,7 @@ class DataGridColumn
 	 * @param string $text
 	 * @return $this
 	 */
-	public function addText(string $text = null)
+	public function addText(string $text = null): DataGridColumn
 	{
 		$this->content[] = $text;
 		return $this;
@@ -51,7 +53,7 @@ class DataGridColumn
 	 * @param Html $html
 	 * @return $this
 	 */
-	public function addHtml(Html $html)
+	public function addHtml(Html $html): DataGridColumn
 	{
 		$this->content[] = (string)$html;
 		return $this;
@@ -60,7 +62,7 @@ class DataGridColumn
 	/**
 	 * @return $this
 	 */
-	public function addLineBreak()
+	public function addLineBreak(): DataGridColumn
 	{
 		$this->content[] = Html::el('br');
 		return $this;
@@ -87,7 +89,7 @@ class DataGridColumn
 	 * @param string $alt
 	 * @return $this
 	 */
-	public function addImage(string $src, string $alt = null)
+	public function addImage(string $src, string $alt = null): DataGridColumn
 	{
 		$this->content[] = Html::el('img')
 			->src($src)
@@ -102,7 +104,7 @@ class DataGridColumn
 	 * @param bool $marginLeft
 	 * @return $this
 	 */
-	public function addLabel(string $title, string $class = 'primary', bool $marginLeft = false)
+	public function addLabel(string $title, string $class = 'primary', bool $marginLeft = false): DataGridColumn
 	{
 		$this->content[] = Html::el('span')
 			->class("label $class" . ($marginLeft ? ' margin-left-1' : ''))
@@ -114,7 +116,7 @@ class DataGridColumn
 	/**
 	 * @return $this
 	 */
-	public function addSpace()
+	public function addSpace(): DataGridColumn
 	{
 		$this->content[] = ' ';
 		return $this;
@@ -123,7 +125,7 @@ class DataGridColumn
 	/**
 	 * @return $this
 	 */
-	public function addEmpty()
+	public function addEmpty(): DataGridColumn
 	{
 		$this->content[] = null;
 		return $this;
@@ -178,9 +180,9 @@ class DataGridColumn
 	 * @param string $name
 	 * @param string $value
 	 * @param string $ajaxUrl
-	 * @return $this
+	 * @return Html
 	 */
-	public function addTextInput(string $name, $value, string $ajaxUrl = null)
+	public function addTextInput(string $name, $value, string $ajaxUrl = null): Html
 	{
 		$input = Html::el('input')
 			->type('text')
@@ -193,7 +195,7 @@ class DataGridColumn
 		}
 
 		$this->content[] = $input;
-		return $this;
+		return $input;
 	}
 
 	/**
@@ -201,7 +203,7 @@ class DataGridColumn
 	 * @param string $value
 	 * @return $this
 	 */
-	public function addHiddenInput(string $name, string $value)
+	public function addHiddenInput(string $name, string $value): DataGridColumn
 	{
 		$this->content[] = Html::el('input')
 			->type('hidden')
@@ -250,9 +252,9 @@ class DataGridColumn
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getClass()
+	public function getClass(): ?string
 	{
 		return $this->class;
 	}
@@ -274,9 +276,27 @@ class DataGridColumn
 	}
 
 	/**
+	 * @return int|null
+	 */
+	public function getWidth(): ?int
+	{
+		return $this->width;
+	}
+
+	/**
+	 * @param int|null $width
+	 * @return DataGridColumn
+	 */
+	public function setWidth(?int $width): DataGridColumn
+	{
+		$this->width = $width;
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 */
-	public function render()
+	public function render(): string
 	{
 		if ($this->type === self::TYPE_BUTTON_GROUP) {
 			$return = Html::el('div')->class('button-group float-right');
