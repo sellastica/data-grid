@@ -186,7 +186,7 @@ class DataGridColumn
 	{
 		$input = Html::el('input')
 			->type('text')
-			->class('form-control select-on-focus input-masked')
+			->class('form-control select-on-focus show-on-hover')
 			->name($name)
 			->value($value);
 
