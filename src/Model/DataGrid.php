@@ -10,6 +10,10 @@ use Sellastica\Utils\Strings;
 
 class DataGrid
 {
+	/** @var UI\Control */
+	private $control;
+	/** @var \Sellastica\DataGrid\Component\DataGridControl */
+	private $dataGridControl;
 	/** @var \Sellastica\Entity\Mapping\IRepository */
 	private $repository;
 	/** @var \Sellastica\DataGrid\Model\FilterRuleCollection|null */
@@ -30,29 +34,38 @@ class DataGrid
 	private $sortableColumns = [];
 	/** @var array */
 	private $mapping = [];
-	/** @var UI\Control */
-	private $control;
 	/** @var array */
 	private $bulkActions = [];
 	/** @var string */
 	private $bulkPrimaryKey = 'id';
 
-	
+
 	/**
 	 * @param UI\Control $control
+	 * @param \Sellastica\DataGrid\Component\DataGridControl $dataGridControl
 	 * @param \Sellastica\Entity\Mapping\IRepository $repository
 	 * @param FilterRuleCollection $filterRules
 	 */
 	public function __construct(
 		UI\Control $control,
+		\Sellastica\DataGrid\Component\DataGridControl $dataGridControl,
 		\Sellastica\Entity\Mapping\IRepository $repository,
 		\Sellastica\DataGrid\Model\FilterRuleCollection $filterRules = null
 	)
 	{
+		$this->control = $control;
+		$this->dataGridControl = $dataGridControl;
 		$this->repository = $repository;
 		$this->filterRules = $filterRules;
 		$this->header = new DataGridHeader($this);
-		$this->control = $control;
+	}
+
+	/**
+	 * @return \Sellastica\DataGrid\Component\DataGridControl
+	 */
+	public function getDataGridControl(): \Sellastica\DataGrid\Component\DataGridControl
+	{
+		return $this->dataGridControl;
 	}
 
 	/**
@@ -218,7 +231,7 @@ class DataGrid
 	 */
 	public function addRow($class = null)
 	{
-		return $this->rows[] = new DataGridRow($class);
+		return $this->rows[] = new DataGridRow($this->dataGridControl, $class);
 	}
 
 	/**
@@ -263,12 +276,23 @@ class DataGrid
 
 	/**
 	 * @param string $title
-	 * @param string $url
+	 * @param string $action
 	 * @param bool $confirm
+	 * @param array $dataAttributes
 	 */
-	public function addBulkAction(string $title, string $url, bool $confirm = false)
+	public function addBulkAction(
+		string $title,
+		string $action = null,
+		bool $confirm = false,
+		array $dataAttributes = []
+	)
 	{
-		$this->bulkActions[] = [$title, $url, $confirm];
+		$this->bulkActions[] = [
+			'title' => $title,
+			'action' => $action,
+			'confirm' => $confirm,
+			'data' => $dataAttributes,
+		];
 	}
 
 	/**

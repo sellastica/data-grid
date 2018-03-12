@@ -45,6 +45,8 @@ class DataGridControl extends BaseControl
 	private $displayCustomTab = false;
 	/** @var Request */
 	private $request;
+	/** @var \Sellastica\DataGrid\Component\ContentFormFactory */
+	private $contentFormFactory;
 
 
 	/**
@@ -57,6 +59,7 @@ class DataGridControl extends BaseControl
 	 * @param ITagsFactory $searchTagsFactory
 	 * @param ISaveSearchFormFactory $saveSearchFormFactory
 	 * @param \Sellastica\DataGrid\Entity\IAdminFilterRepository $adminFilterRepository
+	 * @param \Sellastica\DataGrid\Component\ContentFormFactory $contentFormFactory
 	 */
 	public function __construct(
 		IRepository $repository,
@@ -67,7 +70,8 @@ class DataGridControl extends BaseControl
 		ITabsFactory $searchTabsFactory,
 		ITagsFactory $searchTagsFactory,
 		ISaveSearchFormFactory $saveSearchFormFactory,
-		IAdminFilterRepository $adminFilterRepository
+		IAdminFilterRepository $adminFilterRepository,
+		ContentFormFactory $contentFormFactory
 	)
 	{
 		parent::__construct();
@@ -85,6 +89,7 @@ class DataGridControl extends BaseControl
 		}
 
 		$this->request = $request;
+		$this->contentFormFactory = $contentFormFactory;
 	}
 
 	/**
@@ -107,7 +112,12 @@ class DataGridControl extends BaseControl
 	 */
 	public function createGrid(): \Sellastica\DataGrid\Model\DataGrid
 	{
-		$this->dataGrid = new \Sellastica\DataGrid\Model\DataGrid($this->getPresenter(), $this->repository, $this->filterRules);
+		$this->dataGrid = new \Sellastica\DataGrid\Model\DataGrid(
+			$this->getPresenter(),
+			$this,
+			$this->repository,
+			$this->filterRules
+		);
 		$this->dataGrid->setPagination($this->getPagination());
 		return $this->dataGrid;
 	}
@@ -121,14 +131,13 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
+	 * @param bool $allPages
+	 * @param array $bulkValues
 	 * @return \Sellastica\Entity\Entity\EntityCollection
 	 */
-	public function getBulks(): EntityCollection
+	public function getBulks(bool $allPages, array $bulkValues): EntityCollection
 	{
-		$allPages = (bool)$this->request->getPost('all_pages');
-		$bulkIds = $this->request->getPost('bulk_id');
-
-		if (!$allPages && empty($bulkIds)) {
+		if (!$allPages && empty($bulkValues)) {
 			//e.g. by the GET request - return empty array
 			return $this->dataGrid->getResults()->clear();
 		}
@@ -136,7 +145,20 @@ class DataGridControl extends BaseControl
 		if ($allPages) {
 			$this->dataGrid->setPagination(null);
 		} else {
-			$this->dataGrid->getFilterRules()->addSet($this->dataGrid->getBulkPrimaryKey(), $bulkIds);
+			$bulkIds = [];
+			foreach ($bulkValues as $bulkId => $bulkValue) {
+				if ($bulkValue->bulk_id) {
+					$bulkIds[] = $bulkId;
+				}
+			}
+
+			if (!sizeof($bulkIds)) {
+				//e.g. by the GET request - return empty array
+				return $this->dataGrid->getResults()->clear();
+			}
+
+			$this->dataGrid->getFilterRules()->addSet($this->dataGrid->getBulkPrimaryKey(), $bulkIds)
+				->setMapping($this->dataGrid->getBulkPrimaryKey());
 		}
 
 		return $this->dataGrid->getResults();
@@ -203,7 +225,7 @@ class DataGridControl extends BaseControl
 	/**
 	 * @return Tags
 	 */
-	protected function createComponentSearchTags()
+	protected function createComponentSearchTags(): Tags
 	{
 		return $this->searchTagsFactory->create($this->filterRules);
 	}
@@ -224,7 +246,7 @@ class DataGridControl extends BaseControl
 	/**
 	 * @return \Sellastica\AdminUI\Component\Pagination
 	 */
-	protected function createComponentPagination()
+	protected function createComponentPagination(): \Sellastica\AdminUI\Component\Pagination
 	{
 		return new \Sellastica\AdminUI\Component\Pagination($this->getPagination());
 	}
@@ -242,6 +264,22 @@ class DataGridControl extends BaseControl
 		}
 
 		return $this->pagination;
+	}
+
+	/**
+	 * @return \Sellastica\UI\Form\Form
+	 */
+	protected function createComponentContentForm(): \Sellastica\UI\Form\Form
+	{
+		return $this->contentFormFactory->create();
+	}
+
+	/**
+	 * @return \Sellastica\UI\Form\Form
+	 */
+	public function getContentForm(): \Sellastica\UI\Form\Form
+	{
+		return $this['contentForm'];
 	}
 
 	/**

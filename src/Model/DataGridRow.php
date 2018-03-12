@@ -9,13 +9,20 @@ class DataGridRow
 	private $columns = [];
 	/** @var int|null */
 	private $bulkId;
+	/** @var \Sellastica\DataGrid\Component\DataGridControl */
+	private $dataGridControl;
 
 
 	/**
+	 * @param \Sellastica\DataGrid\Component\DataGridControl $dataGridControl
 	 * @param string $class
 	 */
-	public function __construct($class = null)
+	public function __construct(
+		\Sellastica\DataGrid\Component\DataGridControl $dataGridControl,
+		$class = null
+	)
 	{
+		$this->dataGridControl = $dataGridControl;
 		$this->class = $class;
 	}
 
@@ -61,25 +68,29 @@ class DataGridRow
 	}
 
 	/**
-	 * @return int
-	 * @throws \UnexpectedValueException
+	 * @return int|null
 	 */
-	public function getBulkId(): int
+	public function getBulkId(): ?int
 	{
-		if (!$this->bulkId) {
-			throw new \UnexpectedValueException('Bulk ID is not set on the data grid row');
-		}
-
 		return $this->bulkId;
 	}
 
 	/**
-	 * @param int|null $bulkId
+	 * @param int $bulkId
 	 * @return $this
 	 */
 	public function setBulkId(int $bulkId)
 	{
 		$this->bulkId = $bulkId;
+
+		//create form checkbox
+		$contentForm = $this->dataGridControl
+			->getContentForm();
+		$contentForm['content']
+			->addContainer($bulkId)
+			->addPrettyCheckbox('bulk_id')
+			->setAttribute('class', 'bulk-checkbox');
+
 		return $this;
 	}
 }

@@ -28,116 +28,147 @@
 	</div>
 </div>
 
+
+{* column definition *}
+{define column}
+	<td n:class="$column->getClass()"
+			{if $column->getColSpan()} colspan="{$column->getColSpan()}"{/if}
+			{if $column->getWidth()} width="{$column->getWidth()}"{/if}
+	>
+		{$column|noescape}
+	</td>
+{/define}
+
+
 <div class="list-body">
 	{if $grid->hasRows()}
 
 		{* table *}
-		<div class="table-scroll">
-			<table class="list-table hover">
-				<colgroup>
-					{foreach $grid->getHeader()->getColumns() as $column}
-						<col/>
-					{/foreach}
-				</colgroup>
-				<thead>
-				<tr>
+		{form contentForm}
+			<div class="table-scroll">
+				<table class="list-table hover">
+					<colgroup>
+						{foreach $grid->getHeader()->getColumns() as $column}
+							<col/>
+						{/foreach}
+					</colgroup>
+					<thead>
+					<tr>
 
-					{* bulk actions *}
-					{if $grid->getBulkActions()}
-						<th class="select {$column->getClass()}">
-
-							{* bulk actions *}
-							<div class="bulk-actions">
-								<ul>
-									{* main bulk checkbox *}
-									<li class="has-checkbox">
-										<label class="control input-checkbox">
-											<input type="checkbox" class="main-bulk-checkbox">
-											<span class="control-indicator"></span>
-											<span class="if-visible"><span
-														class="checked-items-count">0</span> {_admin.data_grid.items_count_suffix}</span>
-											<i class="fa fa-angle-down if-hidden"></i>
-										</label>
-									</li>
-
-									{* all pages bulk *}
-									<li class="has-checkbox hover all-pages-checkbox" style="display: none">
-										<label class="control input-checkbox">
-											<input type="checkbox"/>
-											<span class="control-indicator"></span>
-											{_admin.data_grid.all_pages}
-										</label>
-									</li>
-
-									{* bulk actions menu *}
-									<li class="if-visible hover bulk-actions-button">
-										<a data-toggle="bulk-actions-dropdown">{_admin.data_grid.bulk_actions} <i
-													class="fa fa-angle-down"></i></a>
-										<ul class="menu dropdown-pane button-dropdown bottom no-padding bulk-menu"
-											data-dropdown
-											data-close-on-click="true"
-											data-v-offset="10" id="bulk-actions-dropdown">
-											{foreach $grid->getBulkActions() as $action}
-												<li>
-													<a href="{$action[1]}"{if $action[2]} class="confirm"{/if}>{$action[0]}</a>
-												</li>
-											{/foreach}
-										</ul>
-									</li>
-								</ul>
-							</div>
-						</th>
-					{/if}
-
-
-					{* columns *}
-					{foreach $grid->getHeader()->getColumns() as $column}
-						{if $column->isText()}
-							<th n:class="$column->getClass()">
-								{$column->getTitle()}
-							</th>
-						{elseif $column->isSortable()}
-							<th class="sorting-header{if $column->isVisible()} active{/if} {$column->getClass()}">
-								<a href="{$column->getUrl()}">
-									{$column->getTitle()}
-									{if $column->isVisible()}
-										<i class="fa fa-caret-{$column->isSortAsc() ? 'up' : 'down'} sorting-arr {$column->isSortAsc() ? 'up' : 'down'}"></i>
-									{/if}
-								</a>
-							</th>
-						{/if}
-					{/foreach}
-				</tr>
-				</thead>
-				<tbody>
-
-				{* grid rows *}
-				{foreach $grid->getRows() as $row}
-					<tr n:class="$row->getClass()">
-
-						{* bulk actions column *}
+						{* bulk actions in header *}
 						{if $grid->getBulkActions()}
-							<td class="select">
-								<label class="control input-checkbox">
-									<input type="checkbox" value="{$row->getBulkId()}" class="bulk-checkbox">
-									<div class="control-indicator"></div>
-								</label>
-							</td>
+							<th class="select {$column->getClass()}">
+
+								{* bulk actions *}
+								<div class="bulk-actions">
+									<ul>
+										{* main bulk checkbox *}
+										<li class="has-checkbox">
+											<label class="control input-checkbox">
+												<input type="checkbox" class="main-bulk-checkbox">
+												<span class="control-indicator"></span>
+												<span class="if-visible"><span
+															class="checked-items-count">0</span> {_admin.data_grid.items_count_suffix}</span>
+												<i class="fa fa-angle-down if-hidden"></i>
+											</label>
+										</li>
+
+										{* all pages bulk *}
+										<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+											<label class="control input-checkbox">
+												{*<input type="checkbox"/>*}
+												<input n:name="all_pages">
+												<span class="control-indicator"></span>
+												{_admin.data_grid.all_pages}
+											</label>
+										</li>
+
+										{* bulk actions menu *}
+										<li class="if-visible hover bulk-actions-button">
+											<a data-toggle="bulk-actions-dropdown">{_admin.data_grid.bulk_actions} <i
+														class="fa fa-angle-down"></i></a>
+											<ul class="menu dropdown-pane button-dropdown bottom no-padding bulk-menu"
+												data-dropdown
+												data-close-on-click="true"
+												data-v-offset="10" id="bulk-actions-dropdown">
+												{foreach $grid->getBulkActions() as $action}
+													<li>
+														<a
+																{if $action['action']}href="{$action['action']}"{/if}
+																{if $action['confirm']} class="confirm"{/if}
+																{foreach $action['data'] as $key => $value}
+																	data-{$key}="{$value}"
+																{/foreach}
+														>
+															{$action['title']}
+														</a>
+													</li>
+												{/foreach}
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</th>
 						{/if}
 
-						{* columns *}
-						{foreach $row->getColumns() as $column}
-							<td n:class="$column->getClass()"
-									{if $column->getColSpan()} colspan="{$column->getColSpan()}"{/if}
-									{if $column->getWidth()} width="{$column->getWidth()}"{/if}>
-								{$column|noescape}
-							</td>
+
+						{* header columns *}
+						{foreach $grid->getHeader()->getColumns() as $column}
+							{if $column->isText()}
+								<th n:class="$column->getClass()">
+									{$column->getTitle()}
+								</th>
+							{elseif $column->isSortable()}
+								<th class="sorting-header{if $column->isVisible()} active{/if} {$column->getClass()}">
+									<a href="{$column->getUrl()}">
+										{$column->getTitle()}
+										{if $column->isVisible()}
+											<i class="fa fa-caret-{$column->isSortAsc() ? 'up' : 'down'} sorting-arr {$column->isSortAsc() ? 'up' : 'down'}"></i>
+										{/if}
+									</a>
+								</th>
+							{/if}
 						{/foreach}
 					</tr>
-				{/foreach}
-				</tbody>
-			</table>
-		</div>
+					</thead>
+					<tbody>
+
+					{* grid rows *}
+					{formContainer content}
+						{foreach $grid->getRows() as $row}
+							<tr n:class="$row->getClass()">
+
+								{* row if bulk actions are activated *}
+								{if $row->getBulkId()}
+									{formContainer $row->getBulkId()}
+
+										{* bulk actions column *}
+										{if $grid->getBulkActions()}
+											<td class="select">
+												{input bulk_id}
+											</td>
+										{/if}
+
+										{* columns *}
+										{foreach $row->getColumns() as $column}
+											{include #column}
+										{/foreach}
+									{/formContainer}
+
+								{else}
+
+									{* columns *}
+									{foreach $row->getColumns() as $column}
+										{include #column}
+									{/foreach}
+								{/if}
+							</tr>
+						{/foreach}
+					{/formContainer}
+					</tbody>
+				</table>
+			</div>
+		{/form}
 	{else}
 
 		{* no results found *}
