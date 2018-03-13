@@ -175,6 +175,14 @@ class DataGrid
 	}
 
 	/**
+	 * @return null|\Sellastica\UI\Pagination\Pagination
+	 */
+	public function getPagination(): ?\Sellastica\UI\Pagination\Pagination
+	{
+		return $this->pagination;
+	}
+
+	/**
 	 * @return DataGridHeader
 	 */
 	public function getHeader(): DataGridHeader

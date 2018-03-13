@@ -13,8 +13,10 @@ use Sellastica\UI\Pagination\PaginationFactory;
 
 class DataGridControl extends BaseControl
 {
-	const DEFAULT_PAGINATION = 25;
-	const PARAM_FILTER_ID = 'filterId';
+	const DEFAULT_PAGINATION = 25,
+		PARAM_FILTER_ID = 'filterId';
+
+	private const MAX_BULK_PAGES = 100;
 
 	/** @var array */
 	public $onSuccess = [];
@@ -131,34 +133,49 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
-	 * @param bool $allPages
 	 * @param array $bulkValues
 	 * @return \Sellastica\Entity\Entity\EntityCollection
 	 */
-	public function getBulks(bool $allPages, array $bulkValues): EntityCollection
+	public function getBulksById(array $bulkValues): EntityCollection
 	{
-		if (!$allPages && empty($bulkValues)) {
-			//e.g. by the GET request - return empty array
-			return $this->dataGrid->getResults()->clear();
+		$bulkIds = [];
+		foreach ($bulkValues as $bulkId => $bulkValue) {
+			if (is_scalar($bulkValue)) {
+				$bulkIds[] = (int)$bulkValue;
+			} elseif ($bulkValue->bulk_id) {
+				$bulkIds[] = $bulkId;
+			}
 		}
 
-		if ($allPages) {
-			$this->dataGrid->setPagination(null);
+		if (!sizeof($bulkIds)) {
+			//e.g. by the GET request - return empty array
+			$this->repository->getEmptyCollection();
+		}
+
+		$this->dataGrid->getFilterRules()->addSet($this->dataGrid->getBulkPrimaryKey(), $bulkIds)
+			->setMapping($this->dataGrid->getBulkPrimaryKey());
+
+		return $this->dataGrid->getResults();
+	}
+
+	/**
+	 * @param int $page
+	 * @return \Sellastica\Entity\Entity\EntityCollection
+	 */
+	public function getBulksByPage(int $page): EntityCollection
+	{
+		//too much results protection
+		if ($this->dataGrid->getPagination()->getPageCount() > self::MAX_BULK_PAGES) {
+			throw new \Sellastica\DataGrid\Exception\DataGridException(
+				'Cannot run bulk actions if number of pages is grater than ' . self::MAX_BULK_PAGES
+			);
+		}
+
+		if ($this->dataGrid->getPagination()->getPageCount() !== null
+			&& $page > $this->dataGrid->getPagination()->getPageCount()) {
+			return $this->repository->getEmptyCollection();
 		} else {
-			$bulkIds = [];
-			foreach ($bulkValues as $bulkId => $bulkValue) {
-				if ($bulkValue->bulk_id) {
-					$bulkIds[] = $bulkId;
-				}
-			}
-
-			if (!sizeof($bulkIds)) {
-				//e.g. by the GET request - return empty array
-				return $this->dataGrid->getResults()->clear();
-			}
-
-			$this->dataGrid->getFilterRules()->addSet($this->dataGrid->getBulkPrimaryKey(), $bulkIds)
-				->setMapping($this->dataGrid->getBulkPrimaryKey());
+			$this->dataGrid->getPagination()->setPage($page);
 		}
 
 		return $this->dataGrid->getResults();

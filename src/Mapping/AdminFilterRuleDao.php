@@ -20,7 +20,7 @@ class AdminFilterRuleDao extends \Sellastica\Entity\Mapping\Dao
 	/**
 	 * @return \Sellastica\Entity\Entity\EntityCollection|AdminFilterRuleCollection
 	 */
-	protected function getEmptyCollection(): EntityCollection
+	public function getEmptyCollection(): EntityCollection
 	{
 		return new AdminFilterRuleCollection();
 	}

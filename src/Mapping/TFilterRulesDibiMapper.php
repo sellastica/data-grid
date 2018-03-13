@@ -88,7 +88,7 @@ trait TFilterRulesDibiMapper
 
 		//paginator, sorter
 		$this->applyConfiguration($resource, $configuration);
-		return $this->getArray($resource->fetchAll());
+		return $resource->fetchPairs();
 	}
 
 	/**

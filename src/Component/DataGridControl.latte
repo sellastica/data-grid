@@ -95,7 +95,8 @@
 													<li>
 														<a
 																{if $action['action']}href="{$action['action']}"{/if}
-																{if $action['confirm']} class="confirm"{/if}
+																{* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																{if $action['confirm']} data-confirm{/if}
 																{foreach $action['data'] as $key => $value}
 																	data-{$key}="{$value}"
 																{/foreach}
@@ -133,6 +134,7 @@
 					</thead>
 					<tbody>
 
+
 					{* grid rows *}
 					{formContainer content}
 						{foreach $grid->getRows() as $row}
@@ -145,7 +147,14 @@
 										{* bulk actions column *}
 										{if $grid->getBulkActions()}
 											<td class="select">
-												{input bulk_id}
+												{*<input n:name="bulk_id" value="{$row->getBulkId()}">*}
+												{*{input bulk_id}*}
+
+												<label class="control input-checkbox">
+													<input n:name="bulk_id" value="{$row->getBulkId()}">
+													<div class="control-indicator"></div>
+												</label>
+
 											</td>
 										{/if}
 

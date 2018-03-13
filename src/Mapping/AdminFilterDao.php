@@ -21,7 +21,7 @@ class AdminFilterDao extends Dao
 	/**
 	 * @return EntityCollection|AdminFilterCollection
 	 */
-	protected function getEmptyCollection(): EntityCollection
+	public function getEmptyCollection(): EntityCollection
 	{
 		return new AdminFilterCollection();
 	}
