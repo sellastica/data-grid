@@ -230,13 +230,20 @@ class DataGridControl extends BaseControl
 	/**
 	 * @return Tabs
 	 */
-	protected function createComponentSearchTabs()
+	protected function createComponentSearchTabs(): Tabs
 	{
 		$control = $this->searchTabsFactory->create($this->filterRules, $this->displayCustomTab, $this->filterId);
 		$control->onDelete[] = function (array $params) {
 			$this->onDelete($params);
 		};
 		return $control;
+	}
+
+	public function hideAllResultsTab(): void
+	{
+		/** @var \Sellastica\DataGrid\Component\Tabs $tabs */
+		$tabs = $this->getComponent('searchTabs');
+		$tabs->hideAllResultsTab();
 	}
 
 	/**

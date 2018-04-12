@@ -33,6 +33,8 @@ class Tabs extends BaseControl
 	private $filterId;
 	/** @var bool */
 	private $displayCustomTab;
+	/** @var bool */
+	private $displayAllResultsTab = true;
 
 
 	/**
@@ -90,33 +92,27 @@ class Tabs extends BaseControl
 	}
 
 	/**
-	 * @param array $params
-	 */
-	protected function beforeRender(array $params = [])
-	{
-		$this->template->tabs = $this->getTabs();
-	}
-
-	/**
 	 * @return Tab[]
 	 */
-	private function getTabs()
+	private function getTabs(): array
 	{
-		/** @var Tab[] $tabs */
 		$tabs = [];
 		$emptyCriteria = [];
 		foreach ($this->filterRules as $criterion => $title) {
 			$emptyCriteria[$criterion] = null;
 		}
 
-		$defaultTab = new Tab(
-			$this->translator->translate('admin.grid.tabs.all'),
-			$this->presenter->link('default', $emptyCriteria + [DataGridControl::PARAM_FILTER_ID => null, 'page' => null])
-		);
-		$defaultTab->activate();
-		$activeTab = $defaultTab;
+		//all results tab
+		if ($this->displayAllResultsTab) {
+			$defaultTab = new Tab(
+				$this->translator->translate('admin.grid.tabs.all'),
+				$this->presenter->link('default', $emptyCriteria + [DataGridControl::PARAM_FILTER_ID => null, 'page' => null])
+			);
+			$defaultTab->activate();
+			$activeTab = $defaultTab;
 
-		$tabs[] = $defaultTab;
+			$tabs[] = $defaultTab;
+		}
 
 		/** @var \Sellastica\DataGrid\Entity\AdminFilter[] $savedFilters */
 		$savedFilters = $this->adminFilterRepository->findBy(['presenter' => $this->presenter->getShortName()]);
@@ -128,7 +124,10 @@ class Tabs extends BaseControl
 			$tab->setId($savedFilter->getId());
 			if ($this->filterId === $savedFilter->getId()
 				&& !$this->displayCustomTab) {
-				$activeTab->deactivate();
+				if (isset($activeTab)) {
+					$activeTab->deactivate();
+				}
+
 				$tab->activate();
 				$tab->makeDeletable();
 				$activeTab = $tab;
@@ -148,5 +147,18 @@ class Tabs extends BaseControl
 		}
 
 		return $tabs;
+	}
+
+	public function hideAllResultsTab(): void
+	{
+		$this->displayAllResultsTab = false;
+	}
+
+	/**
+	 * @param array $params
+	 */
+	protected function beforeRender(array $params = [])
+	{
+		$this->template->tabs = $this->getTabs();
 	}
 }
