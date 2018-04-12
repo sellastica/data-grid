@@ -7,5 +7,5 @@
 		{include $footer, remove => false}
 	{/form}
 {/capture}
-{capture $title}{_admin.products.import_products}{/capture}
+{capture $title}{_admin.data_grid.save_custom_search_heading}{/capture}
 {control $presenter['modal'], id => 'save-search-form', title => $title, content => $modal}
