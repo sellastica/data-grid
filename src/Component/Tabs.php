@@ -71,10 +71,7 @@ class Tabs extends BaseControl
 	 */
 	public function handleRemove($id)
 	{
-		$savedFilter = $this->adminFilterRepository->findOneBy(
-			['id' => $id, 'adminUserId' => $this->user->getId()]
-		);
-		if (isset($savedFilter)) {
+		if ($savedFilter = $this->adminFilterRepository->find($id)) {
 			$this->entityManager->remove($savedFilter);
 		}
 

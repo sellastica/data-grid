@@ -16,8 +16,6 @@ class AdminFilter extends AbstractEntity implements IAggregateRoot
 {
 	use TAbstractEntity;
 
-	/** @var int @required */
-	private $adminUserId;
 	/** @var string @required */
 	private $title;
 	/** @var string @required */
@@ -32,14 +30,6 @@ class AdminFilter extends AbstractEntity implements IAggregateRoot
 	public function __construct(AdminFilterBuilder $builder)
 	{
 		$this->hydrate($builder);
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getAdminUserId(): int
-	{
-		return $this->adminUserId;
 	}
 
 	/**
@@ -94,7 +84,6 @@ class AdminFilter extends AbstractEntity implements IAggregateRoot
 	{
 		return [
 			'id' => $this->id,
-			'adminUserId' => $this->adminUserId,
 			'title' => $this->title,
 			'presenter' => $this->presenter,
 		];

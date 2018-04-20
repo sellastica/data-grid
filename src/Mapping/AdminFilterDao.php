@@ -14,7 +14,7 @@ class AdminFilterDao extends Dao
 	 */
 	protected function getBuilder($data, $first = null, $second = null): IBuilder
 	{
-		return AdminFilterBuilder::create($data->adminUserId, $data->title, $data->presenter)
+		return AdminFilterBuilder::create($data->title, $data->presenter)
 			->hydrate($data);
 	}
 
