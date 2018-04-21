@@ -1,7 +1,7 @@
 <?php
 namespace Sellastica\DataGrid\Model;
 
-class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess
+class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess, \Countable
 {
 	/** @var array|FilterRule[] */
 	private $rules = [];
@@ -210,5 +210,13 @@ class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess
 	public function offsetUnset($offset)
 	{
 		throw new \Exception('Operation not allowed');
+	}
+
+	/**
+	 * @return int
+	 */
+	public function count(): int
+	{
+		return sizeof($this->rules);
 	}
 }

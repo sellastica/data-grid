@@ -191,23 +191,31 @@ class DataGrid
 	}
 
 	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection|null $filterRules
+	 * @param \Sellastica\UI\Pagination\Pagination|null $pagination
 	 * @return EntityCollection|IEntity[]
 	 */
-	public function getResults(): EntityCollection
+	public function getResults(
+		FilterRuleCollection $filterRules = null,
+		Pagination $pagination = null
+	): EntityCollection
 	{
+		$filterRules = $filterRules ?? $this->filterRules;
+		$pagination = $pagination ?? $this->pagination;
+
 		$configuration = new \Sellastica\Entity\Configuration();
-		if (isset($this->pagination)) {
-			$configuration->setPaginator($this->pagination);
+		if ($pagination) {
+			$configuration->setPaginator($pagination);
 		}
 
 		if ($this->getOrderBy()) {
 			$configuration->addSorterRule($this->getOrderBy(), $this->sortAsc);
 		}
 
-		if ($this->filterRules && sizeof($this->mapping)) {
-			$filterRules = $this->filterRules->applyMapping($this->mapping);
+		if ($filterRules && sizeof($this->mapping)) {
+			$filterRules = $filterRules->applyMapping($this->mapping); //creates clone
 		} else {
-			$filterRules = clone $this->filterRules; //do not change state of original rules
+			$filterRules = clone $filterRules; //do not change state of original rules
 		}
 
 		if (sizeof($this->queryColumns)) {

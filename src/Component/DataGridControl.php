@@ -152,10 +152,13 @@ class DataGridControl extends BaseControl
 			$this->repository->getEmptyCollection();
 		}
 
-		$this->dataGrid->getFilterRules()->addSet($this->dataGrid->getBulkPrimaryKey(), $bulkIds)
+		$rules = clone $this->dataGrid->getFilterRules();
+		$rules->addSet($this->dataGrid->getBulkPrimaryKey(), $bulkIds)
 			->setMapping($this->dataGrid->getBulkPrimaryKey());
 
-		return $this->dataGrid->getResults();
+		$pagination = clone $this->dataGrid->getPagination();
+		$pagination->setPage(1);
+		return $this->dataGrid->getResults($rules, $pagination);
 	}
 
 	/**

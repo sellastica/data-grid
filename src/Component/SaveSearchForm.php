@@ -1,53 +1,40 @@
 <?php
 namespace Sellastica\DataGrid\Component;
 
-use Nette;
-use Nette\Application\UI;
-use Sellastica\AdminUI\Component\BaseControl;
-use Sellastica\DataGrid\Entity\AdminFilterBuilder;
-use Sellastica\DataGrid\Entity\AdminFilterFactory;
-use Sellastica\DataGrid\Entity\IAdminFilterRepository;
-use Sellastica\DataGrid\Model\FilterRule;
-use Sellastica\DataGrid\Model\FilterRuleCollection;
-use Sellastica\Entity\EntityManager;
-use Sellastica\UI\Form\Form;
-use Sellastica\UI\Form\FormFactory;
-use Sellastica\UI\Presenter\IPresenter;
-
 /**
- * @property-read UI\Presenter|IPresenter $presenter
+ * @property-read \Sellastica\UI\Presenter\IPresenter $presenter
  */
-class SaveSearchForm extends BaseControl
+class SaveSearchForm extends \Sellastica\AdminUI\Component\BaseControl
 {
 	/** @var array */
 	public $onSuccess = [];
-	/** @var Nette\Security\User */
+	/** @var \Nette\Security\User */
 	private $user;
-	/** @var FormFactory */
+	/** @var \Sellastica\UI\Form\FormFactory */
 	private $formFactory;
-	/** @var AdminFilterFactory */
+	/** @var \Sellastica\DataGrid\Entity\AdminFilterFactory */
 	private $adminFilterFactory;
 	/** @var \Sellastica\Entity\EntityManager */
 	private $entityManager;
-	/** @var FilterRuleCollection|FilterRule[] */
+	/** @var \Sellastica\DataGrid\Model\FilterRuleCollection|\Sellastica\DataGrid\Model\FilterRule[] */
 	private $filterRules;
 
 
 	/**
-	 * @param FilterRuleCollection $filterRules
-	 * @param IAdminFilterRepository $adminFilterRepository
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $filterRules
+	 * @param \Sellastica\DataGrid\Entity\IAdminFilterRepository $adminFilterRepository
 	 * @param \Sellastica\Entity\EntityManager $entityManager
-	 * @param Nette\Security\User $user
-	 * @param FormFactory $formFactory
-	 * @param AdminFilterFactory $adminFilterFactory
+	 * @param \Nette\Security\User $user
+	 * @param \Sellastica\UI\Form\FormFactory $formFactory
+	 * @param \Sellastica\DataGrid\Entity\AdminFilterFactory $adminFilterFactory
 	 */
 	public function __construct(
-		FilterRuleCollection $filterRules,
-		IAdminFilterRepository $adminFilterRepository,
-		EntityManager $entityManager,
-		Nette\Security\User $user,
-		FormFactory $formFactory,
-		AdminFilterFactory $adminFilterFactory
+		\Sellastica\DataGrid\Model\FilterRuleCollection $filterRules,
+		\Sellastica\DataGrid\Entity\IAdminFilterRepository $adminFilterRepository,
+		\Sellastica\Entity\EntityManager $entityManager,
+		\Nette\Security\User $user,
+		\Sellastica\UI\Form\FormFactory $formFactory,
+		\Sellastica\DataGrid\Entity\AdminFilterFactory $adminFilterFactory
 	)
 	{
 		parent::__construct();
@@ -60,9 +47,9 @@ class SaveSearchForm extends BaseControl
 
 	/**
 	 * Text search form for the listing controllers
-	 * @return Form
+	 * @return \Sellastica\UI\Form\Form
 	 */
-	protected function createComponentSaveSearchForm()
+	protected function createComponentSaveSearchForm(): \Sellastica\UI\Form\Form
 	{
 		$form = $this->formFactory->create();
 		$form->addText('title')
@@ -78,11 +65,10 @@ class SaveSearchForm extends BaseControl
 	 * @param \Sellastica\UI\Form\Form $form
 	 * @param mixed $values
 	 */
-	public function processForm(Form $form, $values)
+	public function processForm(\Sellastica\UI\Form\Form $form, $values): void
 	{
 		$adminFilter = $this->adminFilterFactory->build(
-			AdminFilterBuilder::create(
-				$this->user->getId(),
+			\Sellastica\DataGrid\Entity\AdminFilterBuilder::create(
 				$values->title,
 				$this->presenter->getShortName()
 			)
@@ -104,7 +90,7 @@ class SaveSearchForm extends BaseControl
 	/**
 	 * @param array $params
 	 */
-	protected function beforeRender(array $params = [])
+	protected function beforeRender(array $params = []): void
 	{
 	}
 }
