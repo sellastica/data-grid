@@ -2,8 +2,8 @@
 {control searchTabs}
 
 <div class="list-header">
-	<div class="row align-middle">
-		<div class="column small-12 medium-6 {if $grid->displaySearchForm() && $presenter->getComponent('dataGrid')->getComponent('searchForm')->displaySearchInput()}large-4{else}shrink{/if}">
+	<div class="grid-x grid-margin-x align-middle">
+		<div class="cell small-12 medium-6 {if $grid->displaySearchForm() && $presenter->getComponent('dataGrid')->getComponent('searchForm')->displaySearchInput()}large-4{else}shrink{/if}">
 
 			{* search form *}
 			{if $grid->displaySearchForm() && $grid->hasRows()}

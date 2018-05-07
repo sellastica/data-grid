@@ -1,5 +1,5 @@
 {if !empty($tags)}
-	<div class="column search-tags">
+	<div class="cell shrink search-tags">
 		{foreach $tags as $tag}
 			<a href="{$tag->getUrl()}" class="label secondary">
 				{_$tag->getTitle()}: {$tag->getDisplayValue()}
