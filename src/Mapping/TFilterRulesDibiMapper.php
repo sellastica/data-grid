@@ -44,6 +44,11 @@ trait TFilterRulesDibiMapper
 						sprintf('%s %s %s', $modificator, $rule->getComparator(), '%i'), $column, $rule->getValue()
 					);
 					break;
+				case FilterRule::DATE:
+					$resource->where(
+						sprintf('%s %s %s', $modificator, $rule->getComparator(), '%d'), $column, $rule->getValue()
+					);
+					break;
 				case FilterRule::ENUM:
 					$resource->where("$modificator = %s", $column, $rule->getValue());
 					break;

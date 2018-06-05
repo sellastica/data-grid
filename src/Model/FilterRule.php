@@ -9,7 +9,8 @@ class FilterRule
 		INT = 'int',
 		BOOLEAN = 'bool',
 		ENUM = 'enum',
-		SET = 'set';
+		SET = 'set',
+		DATE = 'date';
 
 	const AND = 'and',
 		OR = 'or';
@@ -291,7 +292,8 @@ class FilterRule
 	 */
 	private function assertType(string $type)
 	{
-		if (!in_array($type, [self::STRING, self::INT, self::BOOLEAN, self::ENUM, self::SET])) {
+		$rc = new \ReflectionClass(self::class);
+		if (!in_array($type, $rc->getConstants())) {
 			throw new \InvalidArgumentException(sprintf('Invalid type "%s"', $type));
 		}
 	}

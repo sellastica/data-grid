@@ -54,6 +54,17 @@ class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess, \Countab
 	 * @param string $value
 	 * @return FilterRule
 	 */
+	public function addDate(string $key, string $value = null)
+	{
+		$this->changed = true;
+		return $this->rules[$key] = new FilterRule($key, $value, FilterRule::DATE);
+	}
+
+	/**
+	 * @param string $key
+	 * @param string $value
+	 * @return FilterRule
+	 */
 	public function addEnum(string $key, string $value = null)
 	{
 		$this->changed = true;
