@@ -1,5 +1,5 @@
 <?php
-namespace Sellastica\DataGrid\Mapping;
+namespace Sellastica\DataGrid\Mapping\Dibi;
 
 use Sellastica\DataGrid\Model\FilterRuleCollection;
 use Sellastica\Entity\Configuration;
