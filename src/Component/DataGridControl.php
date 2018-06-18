@@ -134,9 +134,9 @@ class DataGridControl extends BaseControl
 
 	/**
 	 * @param array $bulkValues
-	 * @return \Sellastica\Entity\Entity\EntityCollection
+	 * @return iterable
 	 */
-	public function getBulksById(array $bulkValues): EntityCollection
+	public function getBulksById(array $bulkValues): iterable
 	{
 		$bulkIds = [];
 		foreach ($bulkValues as $bulkId => $bulkValue) {
@@ -163,9 +163,9 @@ class DataGridControl extends BaseControl
 
 	/**
 	 * @param int $page
-	 * @return \Sellastica\Entity\Entity\EntityCollection
+	 * @return iterable
 	 */
-	public function getBulksByPage(int $page): EntityCollection
+	public function getBulksByPage(int $page): iterable
 	{
 		//too much results protection
 		if ($this->dataGrid->getPagination()->getPageCount() > self::MAX_BULK_PAGES) {

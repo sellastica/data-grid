@@ -7,7 +7,7 @@ class DataGridRow
 	private $class;
 	/** @var array */
 	private $columns = [];
-	/** @var int|null */
+	/** @var mixed|null */
 	private $bulkId;
 	/** @var \Sellastica\DataGrid\Component\DataGridControl */
 	private $dataGridControl;
@@ -68,18 +68,18 @@ class DataGridRow
 	}
 
 	/**
-	 * @return int|null
+	 * @return mixed|null
 	 */
-	public function getBulkId(): ?int
+	public function getBulkId()
 	{
 		return $this->bulkId;
 	}
 
 	/**
-	 * @param int $bulkId
+	 * @param $bulkId
 	 * @return $this
 	 */
-	public function setBulkId(int $bulkId)
+	public function setBulkId($bulkId)
 	{
 		$this->bulkId = $bulkId;
 

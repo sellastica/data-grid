@@ -38,6 +38,8 @@ class DataGrid
 	private $bulkActions = [];
 	/** @var string */
 	private $bulkPrimaryKey = 'id';
+	/** @var callable */
+	private $resultsCallback;
 
 
 	/**
@@ -58,6 +60,9 @@ class DataGrid
 		$this->repository = $repository;
 		$this->filterRules = $filterRules;
 		$this->header = new DataGridHeader($this);
+		$this->resultsCallback = function (?FilterRuleCollection $filterRules, \Sellastica\Entity\Configuration $configuration) {
+			return $this->repository->findByFilterRules($filterRules, $configuration);
+		};
 	}
 
 	/**
@@ -191,14 +196,22 @@ class DataGrid
 	}
 
 	/**
+	 * @param callable $resultsCallback
+	 */
+	public function setResultsCallback(callable $resultsCallback): void
+	{
+		$this->resultsCallback = $resultsCallback;
+	}
+
+	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection|null $filterRules
 	 * @param \Sellastica\UI\Pagination\Pagination|null $pagination
-	 * @return EntityCollection|IEntity[]
+	 * @return iterable
 	 */
 	public function getResults(
 		FilterRuleCollection $filterRules = null,
 		Pagination $pagination = null
-	): EntityCollection
+	): iterable
 	{
 		$filterRules = $filterRules ?? $this->filterRules;
 		$pagination = $pagination ?? $this->pagination;
@@ -227,7 +240,7 @@ class DataGrid
 			$filterRules = $filterRules->expand('q', $queryColumns);
 		}
 
-		return $this->repository->findByFilterRules($filterRules, $configuration);
+		return call_user_func_array($this->resultsCallback, [$filterRules, $configuration]);
 	}
 
 	/**

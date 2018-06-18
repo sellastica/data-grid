@@ -106,6 +106,17 @@ class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess, \Countab
 	}
 
 	/**
+	 * @param string $key
+	 * @param bool|null $value
+	 * @return FilterRule
+	 */
+	public function addBoolean(string $key, bool $value = null)
+	{
+		$this->changed = true;
+		return $this->rules[$key] = new FilterRule($key, $value, FilterRule::BOOLEAN);
+	}
+
+	/**
 	 * @param FilterRule $criterion
 	 */
 	public function addRule(FilterRule $criterion)
