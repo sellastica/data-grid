@@ -2,7 +2,7 @@
 namespace Sellastica\DataGrid\Mapping\MongoDB;
 
 /**
- * @property \MongoDB\Collection $defaultCollection
+ * @property \MongoDB\Collection $collection
  */
 trait TFilterRulesMongoMapper
 {
