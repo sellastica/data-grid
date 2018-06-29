@@ -138,7 +138,7 @@
 					{* grid rows *}
 					{formContainer content}
 						{foreach $grid->getRows() as $row}
-							<tr n:class="$row->getClass()">
+							<tr n:class="$row->getClass()"{if $row->getHtmlId()} id="{$row->getHtmlId()}{/if}">
 
 								{* row if bulk actions are activated *}
 								{if $row->getBulkId()}

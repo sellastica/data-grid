@@ -3,9 +3,11 @@ namespace Sellastica\DataGrid\Model;
 
 class DataGridRow
 {
-	/** @var string */
+	/** @var string|null */
+	private $htmlId;
+	/** @var string|null */
 	private $class;
-	/** @var array */
+	/** @var DataGridColumn[] */
 	private $columns = [];
 	/** @var mixed|null */
 	private $bulkId;
@@ -30,7 +32,7 @@ class DataGridRow
 	 * @param string $class
 	 * @return DataGridColumn
 	 */
-	public function addColumn($class = null)
+	public function addColumn($class = null): DataGridColumn
 	{
 		return $this->columns[] = new DataGridColumn($class);
 	}
@@ -38,7 +40,7 @@ class DataGridRow
 	/**
 	 * @return DataGridColumn
 	 */
-	public function addButtonsColumn()
+	public function addButtonsColumn(): DataGridColumn
 	{
 		return $this->columns[] = new DataGridColumn('min-width no-wrap text-right');
 	}
@@ -46,25 +48,45 @@ class DataGridRow
 	/**
 	 * @return DataGridColumn[]
 	 */
-	public function getColumns()
+	public function getColumns(): array
 	{
 		return $this->columns;
 	}
 
 	/**
-	 * @return string
+	 * @return null|string
 	 */
-	public function getClass()
+	public function getHtmlId(): ?string
+	{
+		return $this->htmlId;
+	}
+
+	/**
+	 * @param null|string $htmlId
+	 * @return DataGridRow
+	 */
+	public function setHtmlId(?string $htmlId): DataGridRow
+	{
+		$this->htmlId = $htmlId;
+		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getClass(): ?string
 	{
 		return $this->class;
 	}
 
 	/**
 	 * @param string $class
+	 * @return DataGridRow
 	 */
-	public function setClass(string $class)
+	public function setClass(string $class): DataGridRow
 	{
 		$this->class = $class;
+		return $this;
 	}
 
 	/**
@@ -79,7 +101,7 @@ class DataGridRow
 	 * @param $bulkId
 	 * @return $this
 	 */
-	public function setBulkId($bulkId)
+	public function setBulkId($bulkId): DataGridRow
 	{
 		$this->bulkId = $bulkId;
 
