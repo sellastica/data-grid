@@ -55,7 +55,7 @@ class DataGridColumn
 	 */
 	public function addHtml(Html $html): DataGridColumn
 	{
-		$this->content[] = (string)$html;
+		$this->content[] = $html;
 		return $this;
 	}
 
@@ -299,11 +299,11 @@ class DataGridColumn
 	public function render(): string
 	{
 		if ($this->type === self::TYPE_BUTTON_GROUP) {
-			$return = Html::el('div')->class('button-group float-right');
+			$return = Html::el('div')->class('button-group');
 			foreach ($this->content as $item) {
 				if ($item instanceof Html) {
 					$return->addHtml($item);
-				} elseif ($item instanceof AbstractButton) {
+				} elseif (method_exists($item, 'toHtml')) {
 					$return->addHtml($item->toHtml());
 				} else {
 					$return->addText($item);
