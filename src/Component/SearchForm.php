@@ -3,7 +3,6 @@ namespace Sellastica\DataGrid\Component;
 
 use Nette;
 use Sellastica\AdminUI\Component\BaseControl;
-use Sellastica\DataGrid\Entity\IAdminFilterRepository;
 use Sellastica\DataGrid\Model\FilterRuleCollection;
 use Sellastica\Entity\EntityManager;
 use Sellastica\UI\Form\Form;
@@ -20,11 +19,9 @@ class SearchForm extends BaseControl
 	/** @var \Sellastica\UI\Form\FormFactory */
 	private $formFactory;
 	/** @var \Sellastica\Entity\EntityManager */
-	private $entityManager;
+	private $em;
 	/** @var FilterRuleCollection */
 	private $filterRules;
-	/** @var IAdminFilterRepository */
-	private $adminFilterRepository;
 	/** @var bool */
 	private $displaySearchInput;
 
@@ -32,18 +29,16 @@ class SearchForm extends BaseControl
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $filterRules
 	 * @param bool $displaySearchInput
-	 * @param IAdminFilterRepository $adminFilterRepository
 	 * @param Nette\Security\User $user
 	 * @param \Sellastica\UI\Form\FormFactory $formFactory
-	 * @param \Sellastica\Entity\EntityManager $entityManager
+	 * @param \Sellastica\Entity\EntityManager $em
 	 */
 	public function __construct(
 		FilterRuleCollection $filterRules,
 		bool $displaySearchInput,
-		IAdminFilterRepository $adminFilterRepository,
 		Nette\Security\User $user,
 		FormFactory $formFactory,
-		EntityManager $entityManager
+		EntityManager $em
 	)
 	{
 		parent::__construct();
@@ -51,8 +46,7 @@ class SearchForm extends BaseControl
 		$this->displaySearchInput = $displaySearchInput;
 		$this->user = $user;
 		$this->formFactory = $formFactory;
-		$this->entityManager = $entityManager;
-		$this->adminFilterRepository = $adminFilterRepository;
+		$this->em = $em;
 	}
 
 	/**

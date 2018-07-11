@@ -22,7 +22,6 @@ class SaveSearchForm extends \Sellastica\AdminUI\Component\BaseControl
 
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $filterRules
-	 * @param \Sellastica\DataGrid\Entity\IAdminFilterRepository $adminFilterRepository
 	 * @param \Sellastica\Entity\EntityManager $entityManager
 	 * @param \Nette\Security\User $user
 	 * @param \Sellastica\UI\Form\FormFactory $formFactory
@@ -30,7 +29,6 @@ class SaveSearchForm extends \Sellastica\AdminUI\Component\BaseControl
 	 */
 	public function __construct(
 		\Sellastica\DataGrid\Model\FilterRuleCollection $filterRules,
-		\Sellastica\DataGrid\Entity\IAdminFilterRepository $adminFilterRepository,
 		\Sellastica\Entity\EntityManager $entityManager,
 		\Nette\Security\User $user,
 		\Sellastica\UI\Form\FormFactory $formFactory,

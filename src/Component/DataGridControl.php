@@ -3,10 +3,8 @@ namespace Sellastica\DataGrid\Component;
 
 use Nette\Http\Request;
 use Sellastica\AdminUI\Component\BaseControl;
-use Sellastica\DataGrid\Entity\IAdminFilterRepository;
 use Sellastica\DataGrid\Model\FilterRule;
 use Sellastica\DataGrid\Model\FilterRuleCollection;
-use Sellastica\Entity\Entity\EntityCollection;
 use Sellastica\Entity\Mapping\IRepository;
 use Sellastica\UI\Pagination\Pagination;
 use Sellastica\UI\Pagination\PaginationFactory;
@@ -39,8 +37,6 @@ class DataGridControl extends BaseControl
 	private $repository;
 	/** @var FilterRuleCollection */
 	private $filterRules;
-	/** @var IAdminFilterRepository */
-	private $adminFilterRepository;
 	/** @var int|null */
 	private $filterId;
 	/** @var bool */
@@ -49,6 +45,8 @@ class DataGridControl extends BaseControl
 	private $request;
 	/** @var \Sellastica\DataGrid\Component\ContentFormFactory */
 	private $contentFormFactory;
+	/** @var \Sellastica\Entity\EntityManager */
+	private $em;
 
 
 	/**
@@ -60,8 +58,8 @@ class DataGridControl extends BaseControl
 	 * @param ITabsFactory $searchTabsFactory
 	 * @param ITagsFactory $searchTagsFactory
 	 * @param ISaveSearchFormFactory $saveSearchFormFactory
-	 * @param \Sellastica\DataGrid\Entity\IAdminFilterRepository $adminFilterRepository
 	 * @param \Sellastica\DataGrid\Component\ContentFormFactory $contentFormFactory
+	 * @param \Sellastica\Entity\EntityManager $em
 	 */
 	public function __construct(
 		IRepository $repository,
@@ -72,8 +70,8 @@ class DataGridControl extends BaseControl
 		ITabsFactory $searchTabsFactory,
 		ITagsFactory $searchTagsFactory,
 		ISaveSearchFormFactory $saveSearchFormFactory,
-		IAdminFilterRepository $adminFilterRepository,
-		ContentFormFactory $contentFormFactory
+		ContentFormFactory $contentFormFactory,
+		\Sellastica\Entity\EntityManager $em
 	)
 	{
 		parent::__construct();
@@ -82,7 +80,6 @@ class DataGridControl extends BaseControl
 		$this->searchTagsFactory = $searchTagsFactory;
 		$this->saveSearchFormFactory = $saveSearchFormFactory;
 		$this->repository = $repository;
-		$this->adminFilterRepository = $adminFilterRepository;
 		$this->filterId = $filterId;
 
 		if (isset($filterRules)) {
@@ -92,6 +89,7 @@ class DataGridControl extends BaseControl
 
 		$this->request = $request;
 		$this->contentFormFactory = $contentFormFactory;
+		$this->em = $em;
 	}
 
 	/**
@@ -193,7 +191,8 @@ class DataGridControl extends BaseControl
 	private function mergeFilterRules(FilterRuleCollection $rules, int $filterId = null)
 	{
 		if (isset($filterId)) {
-			$savedSearch = $this->adminFilterRepository->find($filterId);
+			/** @var \Sellastica\DataGrid\Entity\AdminFilter $savedSearch */
+			$savedSearch = $this->em->getRepository(\Sellastica\DataGrid\Entity\AdminFilter::class)->find($filterId);
 		}
 
 		if (isset($savedSearch)) {

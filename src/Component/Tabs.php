@@ -5,7 +5,6 @@ use Nette;
 use Nette\Application\UI;
 use Nette\Localization\ITranslator;
 use Sellastica\AdminUI\Component\BaseControl;
-use Sellastica\DataGrid\Entity\IAdminFilterRepository;
 use Sellastica\DataGrid\Model\FilterRuleCollection;
 use Sellastica\DataGrid\Model\Tab;
 use Sellastica\Entity\EntityManager;
@@ -25,10 +24,8 @@ class Tabs extends BaseControl
 	private $translator;
 	/** @var FilterRuleCollection */
 	private $filterRules;
-	/** @var \Sellastica\DataGrid\Entity\IAdminFilterRepository */
-	private $adminFilterRepository;
 	/** @var \Sellastica\Entity\EntityManager */
-	private $entityManager;
+	private $em;
 	/** @var int */
 	private $filterId;
 	/** @var bool */
@@ -41,27 +38,24 @@ class Tabs extends BaseControl
 	 * @param FilterRuleCollection $filterRules
 	 * @param bool $displayCustomTab
 	 * @param int $filterId
-	 * @param \Sellastica\DataGrid\Entity\IAdminFilterRepository $adminFilterRepository
 	 * @param Nette\Security\User $user
-	 * @param \Sellastica\Entity\EntityManager $entityManager
+	 * @param \Sellastica\Entity\EntityManager $em
 	 * @param ITranslator $translator
 	 */
 	public function __construct(
 		FilterRuleCollection $filterRules,
 		bool $displayCustomTab,
 		int $filterId = null,
-		IAdminFilterRepository $adminFilterRepository,
 		Nette\Security\User $user,
-		EntityManager $entityManager,
+		EntityManager $em,
 		ITranslator $translator
 	)
 	{
 		parent::__construct();
 		$this->translator = $translator;
 		$this->filterRules = $filterRules;
-		$this->adminFilterRepository = $adminFilterRepository;
 		$this->user = $user;
-		$this->entityManager = $entityManager;
+		$this->em = $em;
 		$this->filterId = $filterId;
 		$this->displayCustomTab = $displayCustomTab;
 	}
@@ -71,8 +65,8 @@ class Tabs extends BaseControl
 	 */
 	public function handleRemove($id)
 	{
-		if ($savedFilter = $this->adminFilterRepository->find($id)) {
-			$this->entityManager->remove($savedFilter);
+		if ($savedFilter = $this->em->getRepository(\Sellastica\DataGrid\Entity\AdminFilter::class)->find($id)) {
+			$this->em->remove($savedFilter);
 		}
 
 		$params = [
@@ -112,7 +106,8 @@ class Tabs extends BaseControl
 		}
 
 		/** @var \Sellastica\DataGrid\Entity\AdminFilter[] $savedFilters */
-		$savedFilters = $this->adminFilterRepository->findBy(['presenter' => $this->presenter->getShortName()]);
+		$savedFilters = $this->em->getRepository(\Sellastica\DataGrid\Entity\AdminFilter::class)
+			->findBy(['presenter' => $this->presenter->getShortName()]);
 		foreach ($savedFilters as $savedFilter) {
 			$tab = new Tab(
 				$savedFilter->getTitle(),
