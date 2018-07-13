@@ -47,6 +47,8 @@ class DataGridControl extends BaseControl
 	private $contentFormFactory;
 	/** @var \Sellastica\Entity\EntityManager */
 	private $em;
+	/** @var bool */
+	private $displayTabs = true;
 
 
 	/**
@@ -105,6 +107,11 @@ class DataGridControl extends BaseControl
 		}
 
 		return false;
+	}
+
+	public function hideTabs(): void
+	{
+		$this->displayTabs = false;
 	}
 
 	/**
@@ -315,5 +322,6 @@ class DataGridControl extends BaseControl
 	{
 		$this->template->striped = !empty($params['striped']);
 		$this->template->grid = $this->dataGrid;
+		$this->template->displayTabs = $this->displayTabs;
 	}
 }
