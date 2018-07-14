@@ -83,6 +83,7 @@ class DataGridControl extends BaseControl
 		$this->saveSearchFormFactory = $saveSearchFormFactory;
 		$this->repository = $repository;
 		$this->filterId = $filterId;
+		$this->em = $em;
 
 		if (isset($filterRules)) {
 			$this->displayCustomTab = $this->displayCustomTab($filterRules);
@@ -91,7 +92,6 @@ class DataGridControl extends BaseControl
 
 		$this->request = $request;
 		$this->contentFormFactory = $contentFormFactory;
-		$this->em = $em;
 	}
 
 	/**
