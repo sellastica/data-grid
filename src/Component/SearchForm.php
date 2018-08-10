@@ -95,10 +95,27 @@ class SearchForm extends BaseControl
 		return $this->displaySearchInput;
 	}
 
+	public function handleCancelSearch(): void
+	{
+		$params = [
+			DataGridControl::PARAM_FILTER_ID => null,
+			'page' => null,
+		];
+		foreach ($this->filterRules as $rule) { //if saved search is active and rules are not present in the url
+			if (!array_key_exists($rule->getKey(), $params)) {
+				$params[$rule->getKey()] = $rule->getValue(); //add param to url
+			}
+		}
+
+		$params['q'] = null;
+		$this->onSuccess($params);
+	}
+
 	/**
 	 * @param array $params
 	 */
 	protected function beforeRender(array $params = [])
 	{
+		$this->template->displayCancelButton = (bool)$this->presenter->getParameter('q');
 	}
 }

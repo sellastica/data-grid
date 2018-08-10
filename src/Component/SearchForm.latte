@@ -1,18 +1,28 @@
-{var $formClass = $control->displaySearchInput() ? 'input-group' : null}
 {var $buttonClass = $control->displaySearchInput() ? 'input-group-label' : 'button hollow no-margin-bottom'}
 
-{form searchForm class => $formClass}
-	<span class="{$buttonClass} dropdown search-dropdown-trigger" data-toggle="search-dropdown">
-		{if $presenter->getComponent('itemFilter', false)}
-			<span class="filter-button-title">{_admin.globals.buttons.filter}</span>
-			{if $control->displaySearchInput()}
+{form searchForm}
+	<div n:class="$control->displaySearchInput() ? 'input-group' : null">
+
+		{* filter dropdown *}
+		<span class="{$buttonClass} dropdown search-dropdown-trigger" data-toggle="search-dropdown">
+			{if $presenter->getComponent('itemFilter', false)}
+				<span class="filter-button-title">{_admin.globals.buttons.filter}</span>
+				{if $control->displaySearchInput()}
 				<i class="fa fa-caret-down"></i>
 			{/if}
-		{else}
-			<i class="fa fa-search"></i>
+			{else}
+				<i class="fa fa-search"></i>
+			{/if}
+		</span>
+
+		{* input *}
+		{if $control->displaySearchInput()}
+			{input q class => 'input-group-field', type => 'search'}
 		{/if}
-	</span>
-	{if $control->displaySearchInput()}
-		{input q class => 'input-group-field', type => 'search'}
-	{/if}
+
+		{* cancel search button *}
+		{if $displayCancelButton}
+			<a n:href="cancelSearch!" class="input-group-label"><i class="fa fa-times"></i></a>
+		{/if}
+	</div>
 {/form}
