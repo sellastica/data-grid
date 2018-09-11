@@ -38,6 +38,8 @@ class DataGrid
 	private $bulkActions = [];
 	/** @var string */
 	private $bulkPrimaryKey = 'id';
+	/** @var bool */
+	private $bulkAllPages = true;
 	/** @var callable */
 	private $resultsCallback;
 
@@ -206,17 +208,22 @@ class DataGrid
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection|null $filterRules
 	 * @param \Sellastica\UI\Pagination\Pagination|null $pagination
+	 * @param \Sellastica\Entity\Configuration|null $configuration
 	 * @return iterable
 	 */
 	public function getResults(
 		FilterRuleCollection $filterRules = null,
-		Pagination $pagination = null
+		Pagination $pagination = null,
+		\Sellastica\Entity\Configuration $configuration = null
 	): iterable
 	{
 		$filterRules = $filterRules ?? $this->filterRules;
 		$pagination = $pagination ?? $this->pagination;
 
-		$configuration = new \Sellastica\Entity\Configuration();
+		if (!isset($configuration)) {
+			$configuration = new \Sellastica\Entity\Configuration();
+		}
+
 		if ($pagination) {
 			$configuration->setPaginator($pagination);
 		}
@@ -241,6 +248,15 @@ class DataGrid
 		}
 
 		return call_user_func_array($this->resultsCallback, [$filterRules, $configuration]);
+	}
+
+	/**
+	 * @param \Sellastica\Entity\Configuration|null $configuration
+	 * @return iterable
+	 */
+	public function getStandardResults(\Sellastica\Entity\Configuration $configuration = null): iterable
+	{
+		return $this->getResults(null, null, $configuration);
 	}
 
 	/**
@@ -330,5 +346,21 @@ class DataGrid
 	public function getBulkActions(): array
 	{
 		return $this->bulkActions;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isBulkAllPages(): bool
+	{
+		return $this->bulkAllPages;
+	}
+
+	/**
+	 * @param bool $bulkAllPages
+	 */
+	public function setBulkAllPages(bool $bulkAllPages): void
+	{
+		$this->bulkAllPages = $bulkAllPages;
 	}
 }

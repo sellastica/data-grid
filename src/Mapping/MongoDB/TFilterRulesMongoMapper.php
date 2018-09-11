@@ -2,7 +2,8 @@
 namespace Sellastica\DataGrid\Mapping\MongoDB;
 
 /**
- * @property \MongoDB\Collection $collection
+ * @property \MongoDB\Client $mongo
+ * @method \MongoDB\Collection getCollection(\Sellastica\Entity\Configuration $configuration)
  */
 trait TFilterRulesMongoMapper
 {
@@ -86,7 +87,7 @@ trait TFilterRulesMongoMapper
 		\Sellastica\Entity\Configuration $configuration
 	): iterable
 	{
-		return $this->collection->find(
+		return $this->getCollection($configuration)->find(
 			$this->rulesToMatch($rules),
 			$this->getOptions([], $configuration)
 		);

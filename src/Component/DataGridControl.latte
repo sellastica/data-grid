@@ -76,14 +76,15 @@
 										</li>
 
 										{* all pages bulk *}
-										<li class="has-checkbox hover all-pages-checkbox" style="display: none">
-											<label class="control input-checkbox">
-												{*<input type="checkbox"/>*}
-												<input n:name="all_pages">
-												<span class="control-indicator"></span>
-												{_admin.data_grid.all_pages}
-											</label>
-										</li>
+										{if $grid->isBulkAllPages()}
+											<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+												<label class="control input-checkbox">
+													<input n:name="all_pages">
+													<span class="control-indicator"></span>
+													{_admin.data_grid.all_pages}
+												</label>
+											</li>
+										{/if}
 
 										{* bulk actions menu *}
 										<li class="if-visible hover bulk-actions-button">
