@@ -87,9 +87,10 @@ trait TFilterRulesMongoMapper
 		\Sellastica\Entity\Configuration $configuration
 	): iterable
 	{
+		$filter = $this->rulesToMatch($rules);
 		return $this->getCollection($configuration)->find(
-			$this->rulesToMatch($rules),
-			$this->getOptions([], $configuration)
+			$filter,
+			$this->getOptions($filter, $configuration)
 		);
 	}
 }

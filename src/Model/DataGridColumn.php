@@ -50,6 +50,16 @@ class DataGridColumn
 	}
 
 	/**
+	 * @param string $text
+	 * @return DataGridColumn
+	 */
+	public function addGrayText(string $text): DataGridColumn
+	{
+		$this->content[] = Html::el('span')->class('dark-gray')->setText($text);
+		return $this;
+	}
+
+	/**
 	 * @param Html $html
 	 * @return $this
 	 */
