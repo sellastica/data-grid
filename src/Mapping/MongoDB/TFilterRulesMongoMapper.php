@@ -3,7 +3,7 @@ namespace Sellastica\DataGrid\Mapping\MongoDB;
 
 /**
  * @property \MongoDB\Client $mongo
- * @method \MongoDB\Collection getCollection(\Sellastica\Entity\Configuration $configuration)
+ * @method \MongoDB\Collection getCollection(\Sellastica\Entity\Configuration $configuration = null)
  */
 trait TFilterRulesMongoMapper
 {
