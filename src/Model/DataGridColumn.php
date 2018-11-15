@@ -117,7 +117,7 @@ class DataGridColumn
 	public function addLabel($title, string $class = 'primary', bool $marginLeft = false): DataGridColumn
 	{
 		$this->content[] = $span = Html::el('span')
-			->class("label $class" . ($marginLeft ? ' margin-left-1' : ''));
+			->class("label $class" . ($marginLeft ? ' margin-left-1' : ' no-margin-left'));
 		if ($title instanceof Html) {
 			$span->addHtml($title);
 		} else {
