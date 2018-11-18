@@ -7,7 +7,8 @@ use Sellastica\AdminUI\Button\AbstractButton;
 class DataGridColumn
 {
 	const TYPE_STANDARD = 1,
-		TYPE_BUTTON_GROUP = 2;
+		TYPE_BUTTON_GROUP = 2,
+		TYPE_BUTTON_GROUP_SMALL = 3;
 
 	/** @var string|null */
 	private $class;
@@ -313,8 +314,12 @@ class DataGridColumn
 	 */
 	public function render(): string
 	{
-		if ($this->type === self::TYPE_BUTTON_GROUP) {
-			$return = Html::el('div')->class('button-group');
+		if ($this->type === self::TYPE_BUTTON_GROUP
+		|| $this->type === self::TYPE_BUTTON_GROUP_SMALL) {
+			$class = $this->type === self::TYPE_BUTTON_GROUP
+				? 'button-group'
+				: 'button-group small';
+			$return = Html::el('div')->class($class);
 			foreach ($this->content as $item) {
 				if ($item instanceof Html) {
 					$return->addHtml($item);
