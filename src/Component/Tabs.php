@@ -32,6 +32,8 @@ class Tabs extends BaseControl
 	private $displayCustomTab;
 	/** @var bool */
 	private $displayAllResultsTab = true;
+	/** @var Tab[] */
+	private $customTabs = [];
 
 
 	/**
@@ -138,7 +140,23 @@ class Tabs extends BaseControl
 			$tabs[] = $tab;
 		}
 
+		//custom tabs
+		foreach ($this->customTabs as $customTab) {
+			$tabs[] = $customTab;
+		}
+
 		return $tabs;
+	}
+
+	/**
+	 * @param string $title
+	 * @param string $url
+	 * @return Tab
+	 */
+	public function createTab(string $title, string $url): Tab
+	{
+		$this->customTabs[] = $tab = new Tab($title, $url);
+		return $tab;
 	}
 
 	public function hideAllResultsTab(): void

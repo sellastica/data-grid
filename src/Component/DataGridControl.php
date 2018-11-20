@@ -256,6 +256,18 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
+	 * @param string $title
+	 * @param string $url
+	 * @return \Sellastica\DataGrid\Model\Tab
+	 */
+	public function createTab(string $title, string $url): \Sellastica\DataGrid\Model\Tab
+	{
+		/** @var \Sellastica\DataGrid\Component\Tabs $tabs */
+		$tabs = $this->getComponent('searchTabs');
+		return $tabs->createTab($title, $url);
+	}
+
+	/**
 	 * @return Tags
 	 */
 	protected function createComponentSearchTags(): Tags
