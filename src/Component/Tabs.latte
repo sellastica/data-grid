@@ -1,25 +1,29 @@
 {if !empty($tabs)}
-	<ul class="tabs">
-		{foreach $tabs as $tab}
-			<li class="tabs-title {if $tab->isActive()} is-active{/if}{if $tab->isSaveable()} save{/if}">
-				{if $tab->isActive()}
-					{if $tab->isSaveable()}
-						<a data-toggle="save-search-form">
-							<i class="fa fa-bookmark-o"></i>
-							{_admin.globals.buttons.save}...
-						</a>
+	<div class="pills-struct">
+		<ul role="tablist" class="tabs nav nav-pills nav-pills-rounded mb-10">
+			{foreach $tabs as $tab}
+				<li class="tabs-title {if $tab->isActive()} is-active active{/if}{if $tab->isSaveable()} save{/if}" role="presentation">
+					{if $tab->isActive()}
+						{if $tab->isSaveable()}
+							<a data-toggle="save-search-form">
+								<i class="fa fa-bookmark-o"></i>
+								{_admin.globals.buttons.save}...
+							</a>
+						{else}
+							<a>
+								<span aria-selected="true">
+									{$tab->getTitle()}
+								</span>
+							</a>
+						{/if}
+						{if $tab->isDeletable()}
+							<a n:href="remove id => $tab->getId()" class="tab-action">&times;</a>
+						{/if}
 					{else}
-						<span aria-selected="true">
-							{$tab->getTitle()}
-						</span>
+						<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
 					{/if}
-					{if $tab->isDeletable()}
-						<a n:href="remove id => $tab->getId()" class="tab-action">&times;</a>
-					{/if}
-				{else}
-					<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
-				{/if}
-			</li>
-		{/foreach}
-	</ul>
+				</li>
+			{/foreach}
+		</ul>
+	</div>
 {/if}

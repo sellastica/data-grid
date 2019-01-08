@@ -42,13 +42,13 @@
 {/define}
 
 
-<div class="list-body">
+<div class="list-body panel panel-default card-view">
 	{if $grid->hasRows()}
 
 		{* table *}
 		{form contentForm}
 			<div class="table-scroll">
-				<table class="list-table hover" role="grid">
+				<table class="list-table hover table table-hover" role="grid">
 					<colgroup>
 						{foreach $grid->getHeader()->getColumns() as $column}
 							<col/>
@@ -192,7 +192,10 @@
 </div>
 
 {control pagination}
-{control saveSearchForm}
+
+{if $control->displaySaveSearchForm()}
+	{control saveSearchForm}
+{/if}
 
 
 {* form elements change ajax handling *}

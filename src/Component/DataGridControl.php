@@ -49,6 +49,8 @@ class DataGridControl extends BaseControl
 	private $em;
 	/** @var bool */
 	private $displayTabs = true;
+	/** @var bool */
+	private $displaySaveSearchForm = true;
 
 
 	/**
@@ -325,6 +327,22 @@ class DataGridControl extends BaseControl
 	public function getContentForm(): \Sellastica\UI\Form\Form
 	{
 		return $this['contentForm'];
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function displaySaveSearchForm(): bool
+	{
+		return $this->displaySaveSearchForm;
+	}
+
+	/**
+	 * @param bool $displaySaveSearchForm
+	 */
+	public function setDisplaySaveSearchForm(bool $displaySaveSearchForm): void
+	{
+		$this->displaySaveSearchForm = $displaySaveSearchForm;
 	}
 
 	/**
