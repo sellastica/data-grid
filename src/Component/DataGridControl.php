@@ -51,6 +51,8 @@ class DataGridControl extends BaseControl
 	private $displayTabs = true;
 	/** @var bool */
 	private $displaySaveSearchForm = true;
+	/** @var \Nette\Localization\ITranslator */
+	private $translator;
 
 
 	/**
@@ -64,6 +66,7 @@ class DataGridControl extends BaseControl
 	 * @param ISaveSearchFormFactory $saveSearchFormFactory
 	 * @param \Sellastica\DataGrid\Component\ContentFormFactory $contentFormFactory
 	 * @param \Sellastica\Entity\EntityManager $em
+	 * @param \Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		IRepository $repository,
@@ -75,7 +78,8 @@ class DataGridControl extends BaseControl
 		ITagsFactory $searchTagsFactory,
 		ISaveSearchFormFactory $saveSearchFormFactory,
 		ContentFormFactory $contentFormFactory,
-		\Sellastica\Entity\EntityManager $em
+		\Sellastica\Entity\EntityManager $em,
+		\Nette\Localization\ITranslator $translator
 	)
 	{
 		parent::__construct();
@@ -86,6 +90,7 @@ class DataGridControl extends BaseControl
 		$this->repository = $repository;
 		$this->filterId = $filterId;
 		$this->em = $em;
+		$this->translator = $translator;
 
 		if (isset($filterRules)) {
 			$this->displayCustomTab = $this->displayCustomTab($filterRules);
@@ -295,7 +300,14 @@ class DataGridControl extends BaseControl
 	 */
 	protected function createComponentPagination(): \Sellastica\AdminUI\Component\Pagination
 	{
-		return new \Sellastica\AdminUI\Component\Pagination($this->getPagination());
+		$control = new \Sellastica\AdminUI\Component\Pagination(
+			$this->getPagination(),
+			$this->translator
+		);
+		$control->onSuccess[] = function (array $params) {
+			$this->onSuccess($params);
+		};
+		return $control;
 	}
 
 	/**
@@ -353,5 +365,13 @@ class DataGridControl extends BaseControl
 		$this->template->striped = !empty($params['striped']);
 		$this->template->grid = $this->dataGrid;
 		$this->template->displayTabs = $this->displayTabs;
+	}
+
+	public function renderCardView()
+	{
+		$this->setFile(__DIR__ . '/DataGridControl.cardView.latte');
+		$this->template->grid = $this->dataGrid;
+		$this->template->displayTabs = $this->displayTabs;
+		$this->template->render();
 	}
 }

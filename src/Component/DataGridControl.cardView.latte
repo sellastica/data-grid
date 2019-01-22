@@ -1,0 +1,47 @@
+{* search tabs *}
+{if $displayTabs}
+	{control searchTabs}
+{/if}
+
+<div class="row">
+	{foreach $grid->getRows() as $row}
+		<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+			<div class="panel panel-default card-view pa-0">
+				<div class="panel-wrapper collapse in">
+					<div class="panel-body pa-0{if $row->getData('hidden') || !$row->getData('status')->isApproved()} greyscale{/if}">
+						<article class="col-item">
+							<div class="photo">
+								{*<div class="options">*}
+								{*<a href="add-products.html" class="font-18 txt-grey mr-10 pull-left"><i class="zmdi zmdi-edit"></i></a>*}
+								{*<a href="javascript:void(0);" class="font-18 txt-grey pull-left sa-warning"><i class="zmdi zmdi-close"></i></a>*}
+								{*</div>*}
+								<a href="{$row->getData('link')|noescape}">
+									<img src="{$row->getData('image')|noescape}" class="img-responsive" alt="Product Image"/>
+								</a>
+							</div>
+							<div class="info">
+
+								{* title *}
+								<h6 class="mb-10">
+									<a href="{$row->getData('link')|noescape}" class="underline-hover">
+										{$row->getData('title')|noescape}
+									</a>
+								</h6>
+								<span>
+									{$row->getData('code')}
+								</span>
+								<span class="head-font block txt-orange-light-1 font-16 text-right">
+									{$row->getData('price')|noescape}
+								</span>
+							</div>
+						</article>
+					</div>
+				</div>
+			</div>
+		</div>
+	{/foreach}
+</div>
+
+
+{* pagination *}
+{control pagination}

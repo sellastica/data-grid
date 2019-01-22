@@ -90,7 +90,7 @@ class DataGridColumn
 		$this->content[] = $link = Html::el('a')
 			->href($url)
 			->setText($linkText)
-			->class($class);
+			->class($class ?? 'underline');
 
 		return $link;
 	}
@@ -317,8 +317,8 @@ class DataGridColumn
 		if ($this->type === self::TYPE_BUTTON_GROUP
 		|| $this->type === self::TYPE_BUTTON_GROUP_SMALL) {
 			$class = $this->type === self::TYPE_BUTTON_GROUP
-				? 'button-group'
-				: 'button-group small';
+				? 'button-group btn-group'
+				: 'button-group small btn-group';
 			$return = Html::el('div')->class($class);
 			foreach ($this->content as $item) {
 				if ($item instanceof Html) {

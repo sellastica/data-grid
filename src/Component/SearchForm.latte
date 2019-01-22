@@ -1,4 +1,4 @@
-{var $buttonClass = $control->displaySearchInput() ? 'input-group-label' : 'button hollow no-margin-bottom'}
+{var $buttonClass = $control->displaySearchInput() ? 'input-group-label input-group-addon' : 'button hollow no-margin-bottom'}
 
 {form searchForm}
 	<div n:class="$control->displaySearchInput() ? 'input-group' : null">
@@ -17,12 +17,12 @@
 
 		{* input *}
 		{if $control->displaySearchInput()}
-			{input q class => 'input-group-field', type => 'search'}
+			{input q class => 'input-group-field form-control', type => 'search'}
 		{/if}
 
 		{* cancel search button *}
 		{if $displayCancelButton}
-			<a n:href="cancelSearch!" class="input-group-label"><i class="fa fa-times"></i></a>
+			<a n:href="cancelSearch!" class="input-group-label input-group-addon"><i class="fa fa-times"></i></a>
 		{/if}
 	</div>
 {/form}

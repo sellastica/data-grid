@@ -1,11 +1,29 @@
+{* bootstrap search and filter *}
+<div class="grid-filter pull-right hide">
+	<div class="btn-group">
+		<a href="" class="btn btn-default btn-outline">
+			<i class="fa fa-search"></i>
+		</a>
+		<a href="" class="btn btn-default btn-outline">
+			<i class="fa fa-filter"></i>
+		</a>
+		<a href="" class="btn btn-default btn-outline">
+			<i class="fa fa-th-large"></i>
+		</a>
+		<a href="" class="btn btn-default btn-outline">
+			<i class="fa fa-th-list"></i>
+		</a>
+	</div>
+</div>
+
 {* search tabs *}
 {if $displayTabs}
 	{control searchTabs}
 {/if}
 
-<div class="list-header">
-	<div class="grid-x grid-margin-x align-middle">
-		<div class="cell {if $grid->displaySearchForm() && $presenter->getComponent('dataGrid')->getComponent('searchForm')->displaySearchInput()}small-12 medium-6 large-4{else}shrink{/if}">
+<div class="list-header panel panel-default card-view mb-0 pb-20 hidden">
+	<div class="grid-x grid-margin-x align-middle row">
+		<div class="cell {if $grid->displaySearchForm() && $presenter->getComponent('dataGrid')->getComponent('searchForm')->displaySearchInput()}small-12 medium-6 large-4 col-sm-12 col-md-6 col-lg-4{else}shrink{/if}">
 
 			{* search form *}
 			{if $grid->displaySearchForm() && ($grid->hasRows() || $grid->getFilterRules()->count())}
@@ -127,7 +145,7 @@
 									<a href="{$column->getUrl()}">
 										{$column->getTitle()}
 										{if $column->isVisible()}
-											<i class="fa fa-caret-{$column->isSortAsc() ? 'up' : 'down'} sorting-arr {$column->isSortAsc() ? 'up' : 'down'}"></i>
+											<i class="fa fa-caret-{$column->isSortAsc() ? 'up' : 'down'}"></i>
 										{/if}
 									</a>
 								</th>

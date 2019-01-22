@@ -13,6 +13,8 @@ class DataGridRow
 	private $bulkId;
 	/** @var \Sellastica\DataGrid\Component\DataGridControl */
 	private $dataGridControl;
+	/** @var array */
+	private $data = [];
 
 
 	/**
@@ -95,6 +97,26 @@ class DataGridRow
 	public function getBulkId()
 	{
 		return $this->bulkId;
+	}
+
+	/**
+	 * @param string $name
+	 * @param $value
+	 * @return DataGridRow
+	 */
+	public function addData(string $name, $value): DataGridRow
+	{
+		$this->data[$name] = $value;
+		return $this;
+	}
+
+	/**
+	 * @param string|null $name
+	 * @return mixed
+	 */
+	public function getData(string $name = null)
+	{
+		return isset($name) ? $this->data[$name] : $this->data;
 	}
 
 	/**
