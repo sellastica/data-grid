@@ -1,28 +1,102 @@
 {var $buttonClass = $control->displaySearchInput() ? 'input-group-label input-group-addon' : 'button hollow no-margin-bottom'}
 
-{form searchForm}
-	<div n:class="$control->displaySearchInput() ? 'input-group' : null">
+{if $presenter->isBetaAdmin()}
 
-		{* filter dropdown *}
-		<span class="{$buttonClass} dropdown search-dropdown-trigger" data-toggle="search-dropdown">
-			{if $presenter->getComponent('itemFilter', false)}
-				<span class="filter-button-title">{_admin.globals.buttons.filter}</span>
-				{if $control->displaySearchInput()}
-				<i class="fa fa-caret-down"></i>
+	{* beta admin *}
+	{form searchForm}
+		<div class="mb-10 pull-right datagrid-search">
+			{* search input *}
+			{if $control->displaySearchInput()}
+				{input q class => 'form-control pull-left', type => 'search', id => 'datagrid-search-input', style => 'display:none'}
+
+				{* cancel search button *}
+				{if $displayCancelButton}
+					<a n:href="cancelSearch!" class="btn btn-default btn-outline"><i class="fa fa-times"></i></a>
+				{/if}
 			{/if}
-			{else}
-				<i class="fa fa-search"></i>
+
+			{* cancel search and filter button *}
+			{if !$displayCancelButton || $presenter->getComponent('itemFilter', false)}
+				<span class="btn-group pull-left">
+
+					{* search button *}
+					{if !$displayCancelButton}
+						<a class="btn btn-default btn-outline" id="datagrid-search-button">
+							<i class="fa fa-search"></i>
+						</a>
+						<a class="btn btn-default btn-outline">
+							<i class="fa fa-filter"></i>
+						</a>
+					{/if}
+
+					{* filter button *}
+					{if $presenter->getComponent('itemFilter', false)}
+						<button type="button" class="btn btn-default btn-outline">
+							<i class="fa fa-filter"></i>
+						</button>
+					{/if}
+				</span>
 			{/if}
-		</span>
+		</div>
 
-		{* input *}
-		{if $control->displaySearchInput()}
-			{input q class => 'input-group-field form-control', type => 'search'}
-		{/if}
+		{*<a href="" class="btn btn-default btn-outline">*}
+		{*<i class="fa fa-th-large"></i>*}
+		{*</a>*}
+		{*<a href="" class="btn btn-default btn-outline">*}
+		{*<i class="fa fa-th-list"></i>*}
+		{*</a>*}
+		{*</div>*}
+	{/form}
+	<div class="clearfix"></div>
 
-		{* cancel search button *}
-		{if $displayCancelButton}
-			<a n:href="cancelSearch!" class="input-group-label input-group-addon"><i class="fa fa-times"></i></a>
-		{/if}
-	</div>
-{/form}
+	<script>
+		$('#datagrid-search-button').click(function () {
+			let $input = $('#datagrid-search-input'),
+				$icon = $(this).find('i');
+
+			if ($input.is(':visible')) {
+				$icon.removeClass('fa-times').addClass('fa-search');
+			} else {
+				$icon.removeClass('fa-search').addClass('fa-times');
+
+			}
+
+			$input.animate({
+				width: 'toggle'
+			});
+			if ($input.is(':visible')) {
+				$input.focus(); //must be after toggle
+			}
+		});
+	</script>
+
+{else}
+
+	{form searchForm}
+		{* alpha admin *}
+		<div n:class="$control->displaySearchInput() ? 'input-group' : null">
+
+			{* filter dropdown *}
+			<span class="{$buttonClass} dropdown search-dropdown-trigger" data-toggle="search-dropdown">
+				{if $presenter->getComponent('itemFilter', false)}
+					<span class="filter-button-title">{_admin.globals.buttons.filter}</span>
+					{if $control->displaySearchInput()}
+					<i class="fa fa-caret-down"></i>
+				{/if}
+				{else}
+					<i class="fa fa-search"></i>
+				{/if}
+			</span>
+
+			{* input *}
+			{if $control->displaySearchInput()}
+				{input q class => 'input-group-field form-control', type => 'search'}
+			{/if}
+
+			{* cancel search button *}
+			{if $displayCancelButton}
+				<a n:href="cancelSearch!" class="input-group-label input-group-addon"><i class="fa fa-times"></i></a>
+			{/if}
+		</div>
+	{/form}
+{/if}

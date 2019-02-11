@@ -1,29 +1,84 @@
 {if !empty($tabs)}
 	<div class="pills-struct">
 		<ul role="tablist" class="tabs nav nav-pills nav-pills-rounded mb-10">
-			{foreach $tabs as $tab}
-				<li class="tabs-title {if $tab->isActive()} is-active active{/if}{if $tab->isSaveable()} save{/if}" role="presentation">
-					{if $tab->isActive()}
-						{if $tab->isSaveable()}
-							<a data-toggle="save-search-form">
-								<i class="fa fa-bookmark-o"></i>
-								{_admin.globals.buttons.save}...
-							</a>
-						{else}
+
+			{var $tabsCount = sizeof($tabs)}
+			{var $maxTabsCount = 5}
+
+			{if $presenter->isBetaAdmin()}
+
+				{* standard tabs *}
+				{foreach $tabs as $key => $tab}
+					{breakIf $tabsCount > $maxTabsCount && $key >= $maxTabsCount - 1}
+					<li class="tabs-title {if $tab->isActive()} is-active active{/if}" role="presentation">
+						{if $tab->isActive()}
 							<a>
 								<span aria-selected="true">
 									{$tab->getTitle()}
 								</span>
 							</a>
+						{else}
+							<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
 						{/if}
-						{if $tab->isDeletable()}
-							<a n:href="remove id => $tab->getId()" class="tab-action">&times;</a>
+					</li>
+				{/foreach}
+
+
+				{* dropdown tabs *}
+				{if $tabsCount > $maxTabsCount}
+
+					{* detect if some tab is active *}
+					{var $dropdownItem = null}
+					{foreach $tabs as $key => $tab}
+						{continueIf $key < $maxTabsCount - 1}
+						{if $tab->isActive()}
+							{var $dropdownItem = $tab->getTitle()}
 						{/if}
-					{else}
-						<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
-					{/if}
-				</li>
-			{/foreach}
+					{/foreach}
+
+					<li class="dropdown{if $dropdownItem} active{/if}" role="presentation">
+						<a data-toggle="dropdown" class="dropdown-toggle" id="another-tabs" href="#" aria-expanded="false">
+							{$dropdownItem ?: 'Další...'}
+							<span class="caret"></span>
+						</a>
+						<ul id="another-tabs-content" class="dropdown-menu">
+							{foreach $tabs as $key => $tab}
+								{continueIf $key < $maxTabsCount - 1}
+								<li{if $tab->isActive()} class="active"{/if}>
+									<a id="another-tab-{$key}" role="tab" href="{$tab->getUrl()}" aria-expanded="true">
+										{$tab->getTitle()}
+									</a>
+								</li>
+							{/foreach}
+						</ul>
+					</li>
+				{/if}
+
+			{else}
+				{foreach $tabs as $tab}
+					<li class="tabs-title {if $tab->isActive()} is-active active{/if}{if $tab->isSaveable()} save{/if}" role="presentation">
+						{if $tab->isActive()}
+							{if $tab->isSaveable()}
+								<a data-toggle="save-search-form">
+									<i class="fa fa-bookmark-o"></i>
+									{_admin.globals.buttons.save}...
+								</a>
+							{else}
+								<a>
+								<span aria-selected="true">
+									{$tab->getTitle()}
+								</span>
+								</a>
+							{/if}
+							{if $tab->isDeletable()}
+								<a n:href="remove id => $tab->getId()" class="tab-action">&times;</a>
+							{/if}
+						{else}
+							<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
+						{/if}
+					</li>
+				{/foreach}
+			{/if}
 		</ul>
 	</div>
 {/if}
