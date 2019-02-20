@@ -7,7 +7,7 @@
 		<div class="mb-10 pull-right datagrid-search">
 			{* search input *}
 			{if $control->displaySearchInput()}
-				{input q class => 'form-control pull-left', type => 'search', id => 'datagrid-search-input', style => 'display:none'}
+				{input q class => 'form-control pull-left mr-5', type => 'search', id => 'datagrid-search-input', style => 'display:none'}
 
 				{* cancel search button *}
 				{if $displayCancelButton}
@@ -24,16 +24,13 @@
 						<a class="btn btn-default btn-outline" id="datagrid-search-button">
 							<i class="fa fa-search"></i>
 						</a>
-						<a class="btn btn-default btn-outline">
-							<i class="fa fa-filter"></i>
-						</a>
 					{/if}
 
 					{* filter button *}
 					{if $presenter->getComponent('itemFilter', false)}
-						<button type="button" class="btn btn-default btn-outline">
+						<a class="btn btn-default btn-outline">
 							<i class="fa fa-filter"></i>
-						</button>
+						</a>
 					{/if}
 				</span>
 			{/if}
