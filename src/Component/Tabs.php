@@ -32,6 +32,8 @@ class Tabs extends BaseControl
 	private $displayCustomTab;
 	/** @var bool */
 	private $displayAllResultsTab = true;
+	/** @var bool */
+	private $allResultsTabDeactivated = false;
 	/** @var Tab[] */
 	private $customTabs = [];
 
@@ -164,11 +166,21 @@ class Tabs extends BaseControl
 		$this->displayAllResultsTab = false;
 	}
 
+	public function deactivateAllResultsTab(): void
+	{
+		$this->allResultsTabDeactivated = true;
+	}
+
 	/**
 	 * @param array $params
 	 */
 	protected function beforeRender(array $params = [])
 	{
-		$this->template->tabs = $this->getTabs();
+		$tabs = $this->getTabs();
+		if ($this->allResultsTabDeactivated) {
+			$tabs[0]->deactivate();
+		}
+
+		$this->template->tabs = $tabs;
 	}
 }

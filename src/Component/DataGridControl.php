@@ -262,6 +262,13 @@ class DataGridControl extends BaseControl
 		$tabs->hideAllResultsTab();
 	}
 
+	public function deactivateAllResultsTab(): void
+	{
+		/** @var \Sellastica\DataGrid\Component\Tabs $tabs */
+		$tabs = $this->getComponent('searchTabs');
+		$tabs->deactivateAllResultsTab();
+	}
+
 	/**
 	 * @param string $title
 	 * @param string $url

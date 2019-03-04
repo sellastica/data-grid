@@ -90,7 +90,7 @@ class DataGridColumn
 		$this->content[] = $link = Html::el('a')
 			->href($url)
 			->setText($linkText)
-			->class($class ?? 'underline');
+			->setAttribute('class', $class ?? 'underline-hover');
 
 		return $link;
 	}
