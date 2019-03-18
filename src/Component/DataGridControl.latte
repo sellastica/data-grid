@@ -233,7 +233,7 @@
 
 {* form elements change ajax handling *}
 <script>
-	$('.list-table > tbody :input').change(function () {
+	$('.list-table > tbody :input').keyup(function () {
 		var $this = $(this),
 			url = $this.data('ajax-url');
 		if (url !== undefined) {

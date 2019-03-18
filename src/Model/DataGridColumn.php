@@ -201,10 +201,10 @@ class DataGridColumn
 	public function addTextInput(string $name, $value, string $ajaxUrl = null): Html
 	{
 		$input = Html::el('input')
-			->type('text')
-			->class('form-control select-on-focus show-on-hover')
-			->name($name)
-			->value($value);
+			->setAttribute('type', 'text')
+			->setAttribute('class', 'form-control select-on-focus show-on-hover')
+			->setAttribute('name', $name)
+			->setAttribute('value', $value);
 
 		if ($ajaxUrl) {
 			$input->data('ajax-url', $ajaxUrl);
