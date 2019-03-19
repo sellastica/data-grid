@@ -3,7 +3,7 @@
 	{control searchTabs}
 {/if}
 
-<div class="row">
+<div class="row row-eq-height">
 	{foreach $grid->getRows() as $row}
 		<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
 			<div class="panel panel-default card-view pa-0">
@@ -16,7 +16,7 @@
 								{*<a href="javascript:void(0);" class="font-18 txt-grey pull-left sa-warning"><i class="zmdi zmdi-close"></i></a>*}
 								{*</div>*}
 								<a href="{$row->getData('link')|noescape}">
-									<img src="{$row->getData('image')|noescape}" class="img-responsive" alt="Product Image"/>
+									<img src="{$row->getData('image')|noescape}" class="img-responsive" alt="{$row->getData('title')|noescape}">
 								</a>
 							</div>
 							<div class="info">
