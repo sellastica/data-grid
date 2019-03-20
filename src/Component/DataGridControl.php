@@ -107,6 +107,10 @@ class DataGridControl extends BaseControl
 	 */
 	private function displayCustomTab(FilterRuleCollection $rules): bool
 	{
+		if (!$this->displaySaveSearchForm) {
+			return false;
+		}
+
 		foreach ($rules as $rule) {
 			if ($rule->isInTags() && !$rule->isDefault()) {
 				return true;
@@ -362,6 +366,9 @@ class DataGridControl extends BaseControl
 	public function setDisplaySaveSearchForm(bool $displaySaveSearchForm): void
 	{
 		$this->displaySaveSearchForm = $displaySaveSearchForm;
+		if (!$displaySaveSearchForm) {
+			$this->displayCustomTab = false;
+		}
 	}
 
 	/**

@@ -136,7 +136,10 @@ class Tabs extends BaseControl
 			$tab = new Tab(
 				$this->translator->translate('admin.grid.tabs.unsaved')
 			);
-			$activeTab->deactivate();
+			if (!empty($activeTab)) {
+				$activeTab->deactivate();
+			}
+
 			$tab->activate();
 			$tab->makeSaveable();
 			$tabs[] = $tab;

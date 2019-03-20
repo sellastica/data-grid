@@ -6,18 +6,48 @@
 <div class="row row-eq-height">
 	{foreach $grid->getRows() as $row}
 		<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
-			<div class="panel panel-default card-view pa-0">
+			<div class="panel panel-default card-view pa-0 product-card">
 				<div class="panel-wrapper collapse in">
 					<div class="panel-body pa-0{if $row->getData('hidden') || !$row->getData('status')->isApproved()} greyscale{/if}">
 						<article class="col-item">
 							<div class="photo">
-								{*<div class="options">*}
-								{*<a href="add-products.html" class="font-18 txt-grey mr-10 pull-left"><i class="zmdi zmdi-edit"></i></a>*}
-								{*<a href="javascript:void(0);" class="font-18 txt-grey pull-left sa-warning"><i class="zmdi zmdi-close"></i></a>*}
-								{*</div>*}
+
+								{* button *}
+								<div class="options">
+									<div class="dropdown inline-block">
+										<a data-toggle="dropdown" class="dropdown-trigger"><i class="fa fa-ellipsis-v"></i></a>
+										<ul class="dropdown-menu dropdown-menu-right " id="5c91edc6d744a" data-dropdown="" data-close-on-click="true" data-v-offset="5" role="menu" data-dropdown-in="flipInX">
+											<li><a data-open="csv-import">Import</a></li>
+											<li><a data-open="csv-export">Export</a></li>
+										</ul>
+									</div>
+								</div>
+
+								{* image *}
 								<a href="{$row->getData('link')|noescape}">
 									<img src="{$row->getData('image')|noescape}" class="img-responsive" alt="{$row->getData('title')|noescape}">
 								</a>
+
+								{* status and visibility *}
+								{var $status = $row->getData('status')}
+								{if !$status->isApproved() || $row->getData('hidden')}
+									<div class="row" style="position: absolute;left:15px;bottom: 10px">
+										<div class="col-sm-12">
+											{* status *}
+											{if !$status->isApproved()}
+												<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
+											{_$status->getTitle()}
+										</span>
+											{/if}
+
+											{* visibility *}
+											{if $row->getData('hidden')}
+												<span class="label label-default{if !$status->isApproved()} ml-5{/if}">Skrytý</span>
+											{/if}
+										</div>
+									</div>
+								{/if}
+
 							</div>
 							<div class="info">
 
@@ -27,12 +57,44 @@
 										{$row->getData('title')|noescape}
 									</a>
 								</h6>
+
+								{* code *}
 								<span>
 									{$row->getData('code')}
 								</span>
-								<span class="head-font block txt-orange-light-1 font-16 text-right">
-									{$row->getData('price')|noescape}
-								</span>
+
+								{* availability *}
+								{if $row->getData('availability')}
+									<br>
+									{if $row->getData('availability')->isInStock()}
+										<span class="txt-success">
+											{$row->getData('availability')}
+										</span>
+									{else}
+										{$row->getData('availability')}
+									{/if}
+								{/if}
+
+								<div class="row no-gutters mt-15">
+									{* status *}
+									{*{var $status = $row->getData('status')}*}
+									<div class="col-sm-6">
+										{*<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">*}
+										{*{_$status->getTitle()}*}
+										{*</span>*}
+
+										{*{if $row->getData('hidden')}*}
+										{*<span class="label label-default">Skrytý</span>*}
+										{*{/if}*}
+									</div>
+
+									{* price *}
+									<div class="col-sm-6 text-right">
+										<span class="head-font txt-primary font-16">
+											{$row->getData('price')|noescape}
+										</span>
+									</div>
+								</div>
 							</div>
 						</article>
 					</div>
