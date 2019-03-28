@@ -12,16 +12,17 @@
 						<article class="col-item">
 							<div class="photo">
 
-								{* button *}
-								<div class="options">
-									<div class="dropdown inline-block">
-										<a data-toggle="dropdown" class="dropdown-trigger"><i class="fa fa-ellipsis-v"></i></a>
-										<ul class="dropdown-menu dropdown-menu-right " id="5c91edc6d744a" data-dropdown="" data-close-on-click="true" data-v-offset="5" role="menu" data-dropdown-in="flipInX">
-											<li><a data-open="csv-import">Import</a></li>
-											<li><a data-open="csv-export">Export</a></li>
-										</ul>
+								{* dropdown button *}
+								{if $dropdown = $row->getData('dropdown')}
+									<div class="options">
+										<div class="dropdown inline-block">
+											<a data-toggle="dropdown" class="dropdown-trigger">
+												<i class="fa fa-ellipsis-v"></i>
+											</a>
+											{$dropdown->getItemsHtml()|noescape}
+										</div>
 									</div>
-								</div>
+								{/if}
 
 								{* image *}
 								<a href="{$row->getData('link')|noescape}">
