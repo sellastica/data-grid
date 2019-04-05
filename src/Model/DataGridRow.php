@@ -116,7 +116,9 @@ class DataGridRow
 	 */
 	public function getData(string $name = null)
 	{
-		return isset($name) ? $this->data[$name] : $this->data;
+		return isset($name)
+			? ($this->data[$name] ?? null)
+			: $this->data;
 	}
 
 	/**

@@ -32,20 +32,18 @@
 								{* status and visibility *}
 								{var $status = $row->getData('status')}
 								{if !$status->isApproved() || $row->getData('hidden')}
-									<div class="row" style="position: absolute;left:15px;bottom: 10px">
-										<div class="col-sm-12">
-											{* status *}
-											{if !$status->isApproved()}
-												<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
-											{_$status->getTitle()}
-										</span>
-											{/if}
+									<div class="labels">
+										{* status *}
+										{if !$status->isApproved()}
+											<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
+												{_$status->getTitle()}
+											</span>
+										{/if}
 
-											{* visibility *}
-											{if $row->getData('hidden')}
-												<span class="label label-default{if !$status->isApproved()} ml-5{/if}">Skrytý</span>
-											{/if}
-										</div>
+										{* visibility *}
+										{if $row->getData('hidden')}
+											<span class="label label-default{if !$status->isApproved()} ml-5{/if}">Skrytý</span>
+										{/if}
 									</div>
 								{/if}
 
