@@ -31,8 +31,15 @@
 
 								{* status and visibility *}
 								{var $status = $row->getData('status')}
-								{if !$status->isApproved() || $row->getData('hidden')}
+								{if $row->getData('supplier') || !$status->isApproved() || $row->getData('hidden')}
 									<div class="labels">
+										{* supplier *}
+										{if $row->getData('supplier')}
+											<span class="label label-default label-outline">
+												{$row->getData('supplier')}
+											</span>
+										{/if}
+
 										{* status *}
 										{if !$status->isApproved()}
 											<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
