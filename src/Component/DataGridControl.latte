@@ -176,14 +176,18 @@
 										{* bulk actions column *}
 										{if $grid->getBulkActions()}
 											<td class="select">
-												{*<input n:name="bulk_id" value="{$row->getBulkId()}">*}
-												{*{input bulk_id}*}
-
-												<label class="control input-checkbox">
-													<input n:name="bulk_id" value="{$row->getBulkId()}">
-													<div class="control-indicator"></div>
-												</label>
-
+												{if $presenter->isBetaAdmin()}
+													<div class="checkbox checkbox-primary">
+														<input type="checkbox" name="availability" id="frm-exportForm-availability" checked="" data-lfv-initialized="true" data-lfv-message-id="frm-exportForm-availability_message">
+														<label for="frm-exportForm-availability"></label>
+														<span id="frm-exportForm-availability_message" class=""></span>
+													</div>
+												{else}
+													<label class="control input-checkbox">
+														<input n:name="bulk_id" value="{$row->getBulkId()}">
+														<div class="control-indicator"></div>
+													</label>
+												{/if}
 											</td>
 										{/if}
 
