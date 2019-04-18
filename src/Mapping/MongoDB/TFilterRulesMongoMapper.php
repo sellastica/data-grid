@@ -93,4 +93,19 @@ trait TFilterRulesMongoMapper
 			$this->getOptions($filter, $configuration)
 		);
 	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @param array $data
+	 */
+	public function updateByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
+		array $data
+	): void
+	{
+		$this->getCollection()->updateMany(
+			$this->rulesToMatch($rules),
+			['$set' => $data]
+		);
+	}
 }

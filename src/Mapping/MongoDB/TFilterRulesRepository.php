@@ -3,6 +3,7 @@ namespace Sellastica\DataGrid\Mapping\MongoDB;
 
 /**
  * @method initialize($entities, $first = null, $second = null)
+ * @property TFilterRulesDao $dao
  */
 trait TFilterRulesRepository
 {
@@ -22,5 +23,17 @@ trait TFilterRulesRepository
 	{
 		$entities = $this->dao->findByFilterRules($rules, $configuration);
 		return $this->initialize($entities);
+	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @param array $data
+	 */
+	public function updateByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
+		array $data
+	): void
+	{
+		$this->dao->updateByFilterRules($rules, $data);
 	}
 }

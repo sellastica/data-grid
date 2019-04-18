@@ -232,6 +232,20 @@ class DataGrid
 			$configuration->addSorterRule($this->getOrderBy(), $this->sortAsc);
 		}
 
+		return call_user_func_array(
+			$this->resultsCallback, [
+				$this->resolveFilterRules($filterRules),
+				$configuration
+			]
+		);
+	}
+
+	/**
+	 * @param FilterRuleCollection $filterRules
+	 * @return FilterRuleCollection
+	 */
+	public function resolveFilterRules(FilterRuleCollection $filterRules): FilterRuleCollection
+	{
 		if ($filterRules && sizeof($this->mapping)) {
 			$filterRules = $filterRules->applyMapping($this->mapping); //creates clone
 		} else {
@@ -247,7 +261,7 @@ class DataGrid
 			$filterRules = $filterRules->expand('q', $queryColumns);
 		}
 
-		return call_user_func_array($this->resultsCallback, [$filterRules, $configuration]);
+		return $filterRules;
 	}
 
 	/**

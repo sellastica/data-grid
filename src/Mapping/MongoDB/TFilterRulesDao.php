@@ -2,7 +2,7 @@
 namespace Sellastica\DataGrid\Mapping\MongoDB;
 
 /**
- * @property \Sellastica\MongoDB\Mapping\MongoMapper $mapper
+ * @property \Sellastica\MongoDB\Mapping\MongoMapper|TFilterRulesMongoMapper $mapper
  */
 trait TFilterRulesDao
 {
@@ -18,5 +18,17 @@ trait TFilterRulesDao
 	{
 		$documents = $this->mapper->findByFilterRules($rules, $configuration);
 		return $this->createCollection($documents);
+	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @param array $data
+	 */
+	public function updateByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
+		array $data
+	): void
+	{
+		$this->mapper->updateByFilterRules($rules, $data);
 	}
 }
