@@ -91,50 +91,93 @@
 								<div class="bulk-actions">
 									<ul>
 										{* main bulk checkbox *}
-										<li class="has-checkbox">
-											<label class="control input-checkbox">
-												<input type="checkbox" class="main-bulk-checkbox">
-												<span class="control-indicator"></span>
-												<span class="if-visible"><span
-															class="checked-items-count">0</span> {_admin.data_grid.items_count_suffix}</span>
-												<i class="fa fa-angle-down if-hidden"></i>
-											</label>
+										<li class="has-checkbox main-bulk-checkbox-wrapper">
+											{if $presenter->isBetaAdmin()}
+												<div class="checkbox checkbox-primary">
+													<input type="checkbox" class="main-bulk-checkbox" id="main-bulk-checkbox">
+													<label for="main-bulk-checkbox"></label>
+												</div>
+											{else}
+												<label class="control input-checkbox">
+													<input type="checkbox" class="main-bulk-checkbox">
+													<span class="control-indicator"></span>
+													<span class="if-visible"><span
+																class="checked-items-count">0</span> {_admin.data_grid.items_count_suffix}</span>
+													<i class="fa fa-angle-down if-hidden"></i>
+												</label>
+											{/if}
 										</li>
 
 										{* all pages bulk *}
 										{if $grid->isBulkAllPages()}
-											<li class="has-checkbox hover all-pages-checkbox" style="display: none">
-												<label class="control input-checkbox">
-													<input n:name="all_pages">
-													<span class="control-indicator"></span>
-													{_admin.data_grid.all_pages}
-												</label>
-											</li>
+											{if $presenter->isBetaAdmin()}
+												<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+													<div class="checkbox checkbox-primary">
+														<input n:name="all_pages">
+														<label n:name="all_pages">{_admin.data_grid.all_pages}</label>
+													</div>
+												</li>
+											{else}
+												<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+													<label class="control input-checkbox">
+														<input n:name="all_pages">
+														<span class="control-indicator"></span>
+														{_admin.data_grid.all_pages}
+													</label>
+												</li>
+											{/if}
 										{/if}
 
 										{* bulk actions menu *}
 										<li class="if-visible hover bulk-actions-button">
-											<a data-toggle="bulk-actions-dropdown">{_admin.data_grid.bulk_actions} <i
-														class="fa fa-angle-down"></i></a>
-											<ul class="menu dropdown-pane button-dropdown bottom no-padding bulk-menu"
-												data-dropdown
-												data-close-on-click="true"
-												data-v-offset="10" id="bulk-actions-dropdown">
-												{foreach $grid->getBulkActions() as $action}
-													<li>
-														<a
-																{if $action['action']}href="{$action['action']}"{/if}
-																{* dont know why, but confirmation dialog on "confirm" class is ignored *}
-																{if $action['confirm']} data-confirm{/if}
-																{foreach $action['data'] as $key => $value}
-																	data-{$key}="{$value}"
-																{/foreach}
-														>
-															{$action['title']}
-														</a>
-													</li>
-												{/foreach}
-											</ul>
+											{if $presenter->isBetaAdmin()}
+												<div class="dropdown inline-block dropdown-animating">
+													<a data-toggle="dropdown" aria-expanded="false">
+														{_admin.data_grid.bulk_actions}
+														<i class="fa fa-angle-down ml-5"></i>
+													</a>
+													<ul class="dropdown-menu dropdown-menu-right animated flipInX nonecase-font" id="5cb7fc26e68e2" data-dropdown="" data-close-on-click="true" data-v-offset="5" role="menu" data-dropdown-in="flipInX">
+														{foreach $grid->getBulkActions() as $action}
+															<li>
+																<a
+																		{if $action['action']}href="{$action['action']}"{/if}
+																		{* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																		{if $action['confirm']} data-confirm{/if}
+																		{foreach $action['data'] as $key => $value}
+																			data-{$key}="{$value}"
+																		{/foreach}
+																>
+																	{$action['title']}
+																</a>
+															</li>
+														{/foreach}
+													</ul>
+												</div>
+											{else}
+												<a data-toggle="bulk-actions-dropdown">
+													{_admin.data_grid.bulk_actions}
+													<i class="fa fa-angle-down"></i>
+												</a>
+												<ul class="menu dropdown-pane button-dropdown bottom no-padding bulk-menu"
+													data-dropdown
+													data-close-on-click="true"
+													data-v-offset="10" id="bulk-actions-dropdown">
+													{foreach $grid->getBulkActions() as $action}
+														<li>
+															<a
+																	{if $action['action']}href="{$action['action']}"{/if}
+																	{* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																	{if $action['confirm']} data-confirm{/if}
+																	{foreach $action['data'] as $key => $value}
+																		data-{$key}="{$value}"
+																	{/foreach}
+															>
+																{$action['title']}
+															</a>
+														</li>
+													{/foreach}
+												</ul>
+											{/if}
 										</li>
 									</ul>
 								</div>
@@ -178,9 +221,8 @@
 											<td class="select">
 												{if $presenter->isBetaAdmin()}
 													<div class="checkbox checkbox-primary">
-														<input type="checkbox" name="availability" id="frm-exportForm-availability" checked="" data-lfv-initialized="true" data-lfv-message-id="frm-exportForm-availability_message">
-														<label for="frm-exportForm-availability"></label>
-														<span id="frm-exportForm-availability_message" class=""></span>
+														<input n:name="bulk_id" value="{$row->getBulkId()}">
+														<label n:name="bulk_id"></label>
 													</div>
 												{else}
 													<label class="control input-checkbox">
@@ -242,6 +284,161 @@
 			url = $this.data('ajax-url');
 		if (url !== undefined) {
 			$.ajax(url + '&value=' + $this.val())
+		}
+	});
+
+	//grid bulk actions
+	$(function () {
+		$.fn.initBulkActions = function () {
+			return this.each(function () {
+				var $el = $(this);
+				var newDiv = $('<div />', {
+					'css': {
+						'height': $el.height(),
+						'width': '100%',
+					}
+				});
+				$el.wrapInner(newDiv);
+			});
+		};
+		$('th.select').initBulkActions();
+
+		function toggleBulkActions() {
+			var $bulks = $('.bulk-actions');
+			if ($('.bulk-checkbox:checked').length) {
+				if (!$bulks.hasClass('visible')) {
+					$bulks.addClass('visible');
+					$bulks.closest('tr').addClass('only-bulk-actions');
+				}
+			} else {
+				$bulks.removeClass('visible');
+				$bulks.closest('tr').removeClass('only-bulk-actions');
+			}
+		}
+
+		function updateItemsCount($table) {
+			var $this = $(this),
+				$itemsCount = $table.find('.checked-items-count'),
+				$allPagesCheckbox = $table.find('.all-pages-checkbox input');
+
+			if ($allPagesCheckbox.is(':checked')) {
+				$itemsCount.text($('.pagination').data('items-count'));
+			} else {
+				$itemsCount.text($table.find('.bulk-checkbox:checked').length);
+			}
+		}
+
+		$('.main-bulk-checkbox').click(function () {
+			var $this = $(this),
+				$table = $this.closest('table'),
+				$checkboxes = $table.find('.bulk-checkbox'),
+				$allPages = $table.find('.all-pages-checkbox');
+
+			if ($this.prop('checked') === true) {
+				$checkboxes.each(function () {
+					$(this).prop('checked', true);
+				});
+				$allPages.show();
+			} else {
+				$checkboxes.each(function () {
+					$(this).prop('checked', false);
+				});
+				$allPages.hide();
+			}
+
+			toggleBulkActions();
+			updateItemsCount($table);
+		});
+
+		$('.bulk-checkbox').click(function () {
+			var $table = $(this).closest('table'),
+				$checkboxes = $table.find('.bulk-checkbox'),
+				$checked = $table.find('.bulk-checkbox:checked'),
+				$mainCheckbox = $table.find('.main-bulk-checkbox'),
+				$allPagesCheckbox = $table.find('.all-pages-checkbox');
+
+			if ($checkboxes.length === $checked.length) { //all checked
+				$mainCheckbox.prop('checked', true);
+				$allPagesCheckbox.show();
+			} else {
+				$mainCheckbox.prop('checked', false);
+				$allPagesCheckbox.find('input').prop('checked', false);
+				$allPagesCheckbox.hide();
+			}
+
+			toggleBulkActions();
+			updateItemsCount($table);
+		});
+
+		$('.all-pages-checkbox').click(function () {
+			updateItemsCount($(this).closest('table'));
+		});
+
+		//bulk actions dropdown action link
+		$('.bulk-menu > li > a').click(function (e) {
+			e.preventDefault();
+			var $this = $(this);
+
+			if ($this.attr('href') === undefined) {
+				return;
+			}
+
+			//confirmation dialog
+			if ($this.attr('data-confirm') !== undefined) {
+				if (!window.confirm(translate('are-you-sure'))) {
+					return false;
+				}
+			}
+
+			var $form = $('#data-grid-content-form'),
+				$formAction = $('#data-grid-bulk-action');
+
+			if ($formAction.length) {
+				$formAction.val($this.attr('href'));
+			}
+
+			$form.submit();
+		});
+
+		//bulk actions modal form
+		$('.bulk-actions-form').submit(function (e) {
+			var $form = $(this),
+				$allPagesCheckbox = $('.all-pages-checkbox input'),
+				$checked = $('.bulk-checkbox:checked');
+
+			$form.append($('<input/>', {
+				type: 'hidden',
+				name: 'all_pages',
+				value: $allPagesCheckbox.is(':checked') ? 1 : 0
+			}));
+			$.each($checked, function () {
+				$form.append($('<input/>', {
+					type: 'hidden',
+					name: 'bulk_id[]',
+					value: $(this).val()
+				}));
+			});
+
+			return true;
+		});
+
+		function appendBulkElementsToForm($form) {
+			var $allPagesCheckbox = $('.all-pages-checkbox input'),
+				$checked = $('.bulk-checkbox:checked');
+
+			$form.append($('<input/>', {
+				type: 'hidden',
+				name: 'all_pages',
+				value: $allPagesCheckbox.is(':checked') ? 1 : 0
+			}));
+			$.each($checked, function () {
+				var $input = $(this);
+				$form.append($('<input/>', {
+					type: 'hidden',
+					name: 'bulk_id[]',
+					value: $input.val()
+				}));
+			});
 		}
 	});
 </script>
