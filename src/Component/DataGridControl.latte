@@ -141,12 +141,17 @@
 															<li>
 																<a
 																		{if $action['action']}href="{$action['action']}"{/if}
-																		{* dont know why, but confirmation dialog on "confirm" class is ignored *}
-																		{if $action['confirm']} data-confirm{/if}
+																		{if $action['confirm']}
+																			{* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																			data-confirm
+																		{/if}
 																		{foreach $action['data'] as $key => $value}
 																			data-{$key}="{$value}"
 																		{/foreach}
 																>
+																	{if $action['icon']}
+																		<i class="{$action['icon']}"></i>
+																	{/if}
 																	{$action['title']}
 																</a>
 															</li>
@@ -288,157 +293,159 @@
 	});
 
 	//grid bulk actions
-	$(function () {
-		$.fn.initBulkActions = function () {
-			return this.each(function () {
-				var $el = $(this);
-				var newDiv = $('<div />', {
-					'css': {
-						'height': $el.height(),
-						'width': '100%',
+	{if $presenter->isBetaAdmin()}
+		$(function () {
+			$.fn.initBulkActions = function () {
+				return this.each(function () {
+					var $el = $(this);
+					var newDiv = $('<div />', {
+						'css': {
+							'height': $el.height(),
+							'width': '100%',
+						}
+					});
+					$el.wrapInner(newDiv);
+				});
+			};
+			$('th.select').initBulkActions();
+
+			function toggleBulkActions() {
+				var $bulks = $('.bulk-actions');
+				if ($('.bulk-checkbox:checked').length) {
+					if (!$bulks.hasClass('visible')) {
+						$bulks.addClass('visible');
+						$bulks.closest('tr').addClass('only-bulk-actions');
 					}
-				});
-				$el.wrapInner(newDiv);
-			});
-		};
-		$('th.select').initBulkActions();
-
-		function toggleBulkActions() {
-			var $bulks = $('.bulk-actions');
-			if ($('.bulk-checkbox:checked').length) {
-				if (!$bulks.hasClass('visible')) {
-					$bulks.addClass('visible');
-					$bulks.closest('tr').addClass('only-bulk-actions');
-				}
-			} else {
-				$bulks.removeClass('visible');
-				$bulks.closest('tr').removeClass('only-bulk-actions');
-			}
-		}
-
-		function updateItemsCount($table) {
-			var $this = $(this),
-				$itemsCount = $table.find('.checked-items-count'),
-				$allPagesCheckbox = $table.find('.all-pages-checkbox input');
-
-			if ($allPagesCheckbox.is(':checked')) {
-				$itemsCount.text($('.pagination').data('items-count'));
-			} else {
-				$itemsCount.text($table.find('.bulk-checkbox:checked').length);
-			}
-		}
-
-		$('.main-bulk-checkbox').click(function () {
-			var $this = $(this),
-				$table = $this.closest('table'),
-				$checkboxes = $table.find('.bulk-checkbox'),
-				$allPages = $table.find('.all-pages-checkbox');
-
-			if ($this.prop('checked') === true) {
-				$checkboxes.each(function () {
-					$(this).prop('checked', true);
-				});
-				$allPages.show();
-			} else {
-				$checkboxes.each(function () {
-					$(this).prop('checked', false);
-				});
-				$allPages.hide();
-			}
-
-			toggleBulkActions();
-			updateItemsCount($table);
-		});
-
-		$('.bulk-checkbox').click(function () {
-			var $table = $(this).closest('table'),
-				$checkboxes = $table.find('.bulk-checkbox'),
-				$checked = $table.find('.bulk-checkbox:checked'),
-				$mainCheckbox = $table.find('.main-bulk-checkbox'),
-				$allPagesCheckbox = $table.find('.all-pages-checkbox');
-
-			if ($checkboxes.length === $checked.length) { //all checked
-				$mainCheckbox.prop('checked', true);
-				$allPagesCheckbox.show();
-			} else {
-				$mainCheckbox.prop('checked', false);
-				$allPagesCheckbox.find('input').prop('checked', false);
-				$allPagesCheckbox.hide();
-			}
-
-			toggleBulkActions();
-			updateItemsCount($table);
-		});
-
-		$('.all-pages-checkbox').click(function () {
-			updateItemsCount($(this).closest('table'));
-		});
-
-		//bulk actions dropdown action link
-		$('.bulk-menu > li > a').click(function (e) {
-			e.preventDefault();
-			var $this = $(this);
-
-			if ($this.attr('href') === undefined) {
-				return;
-			}
-
-			//confirmation dialog
-			if ($this.attr('data-confirm') !== undefined) {
-				if (!window.confirm(translate('are-you-sure'))) {
-					return false;
+				} else {
+					$bulks.removeClass('visible');
+					$bulks.closest('tr').removeClass('only-bulk-actions');
 				}
 			}
 
-			var $form = $('#data-grid-content-form'),
-				$formAction = $('#data-grid-bulk-action');
+			function updateItemsCount($table) {
+				var $this = $(this),
+					$itemsCount = $table.find('.checked-items-count'),
+					$allPagesCheckbox = $table.find('.all-pages-checkbox input');
 
-			if ($formAction.length) {
-				$formAction.val($this.attr('href'));
+				if ($allPagesCheckbox.is(':checked')) {
+					$itemsCount.text($('.pagination').data('items-count'));
+				} else {
+					$itemsCount.text($table.find('.bulk-checkbox:checked').length);
+				}
 			}
 
-			$form.submit();
-		});
+			$('.main-bulk-checkbox').click(function () {
+				var $this = $(this),
+					$table = $this.closest('table'),
+					$checkboxes = $table.find('.bulk-checkbox'),
+					$allPages = $table.find('.all-pages-checkbox');
 
-		//bulk actions modal form
-		$('.bulk-actions-form').submit(function (e) {
-			var $form = $(this),
-				$allPagesCheckbox = $('.all-pages-checkbox input'),
-				$checked = $('.bulk-checkbox:checked');
+				if ($this.prop('checked') === true) {
+					$checkboxes.each(function () {
+						$(this).prop('checked', true);
+					});
+					$allPages.show();
+				} else {
+					$checkboxes.each(function () {
+						$(this).prop('checked', false);
+					});
+					$allPages.hide();
+				}
 
-			$form.append($('<input/>', {
-				type: 'hidden',
-				name: 'all_pages',
-				value: $allPagesCheckbox.is(':checked') ? 1 : 0
-			}));
-			$.each($checked, function () {
-				$form.append($('<input/>', {
-					type: 'hidden',
-					name: 'bulk_id[]',
-					value: $(this).val()
-				}));
+				toggleBulkActions();
+				updateItemsCount($table);
 			});
 
-			return true;
-		});
+			$('.bulk-checkbox').click(function () {
+				var $table = $(this).closest('table'),
+					$checkboxes = $table.find('.bulk-checkbox'),
+					$checked = $table.find('.bulk-checkbox:checked'),
+					$mainCheckbox = $table.find('.main-bulk-checkbox'),
+					$allPagesCheckbox = $table.find('.all-pages-checkbox');
 
-		function appendBulkElementsToForm($form) {
-			var $allPagesCheckbox = $('.all-pages-checkbox input'),
-				$checked = $('.bulk-checkbox:checked');
+				if ($checkboxes.length === $checked.length) { //all checked
+					$mainCheckbox.prop('checked', true);
+					$allPagesCheckbox.show();
+				} else {
+					$mainCheckbox.prop('checked', false);
+					$allPagesCheckbox.find('input').prop('checked', false);
+					$allPagesCheckbox.hide();
+				}
 
-			$form.append($('<input/>', {
-				type: 'hidden',
-				name: 'all_pages',
-				value: $allPagesCheckbox.is(':checked') ? 1 : 0
-			}));
-			$.each($checked, function () {
-				var $input = $(this);
+				toggleBulkActions();
+				updateItemsCount($table);
+			});
+
+			$('.all-pages-checkbox').click(function () {
+				updateItemsCount($(this).closest('table'));
+			});
+
+			//bulk actions dropdown action link
+			$('.bulk-menu > li > a').click(function (e) {
+				e.preventDefault();
+				var $this = $(this);
+
+				if ($this.attr('href') === undefined) {
+					return;
+				}
+
+				//confirmation dialog
+				if ($this.attr('data-confirm') !== undefined) {
+					if (!window.confirm('Jste si jistý?')) {
+						return false;
+					}
+				}
+
+				var $form = $('#data-grid-content-form'),
+					$formAction = $('#data-grid-bulk-action');
+
+				if ($formAction.length) {
+					$formAction.val($this.attr('href'));
+				}
+
+				$form.submit();
+			});
+
+			//bulk actions modal form
+			$('.bulk-actions-form').submit(function (e) {
+				var $form = $(this),
+					$allPagesCheckbox = $('.all-pages-checkbox input'),
+					$checked = $('.bulk-checkbox:checked');
+
 				$form.append($('<input/>', {
 					type: 'hidden',
-					name: 'bulk_id[]',
-					value: $input.val()
+					name: 'all_pages',
+					value: $allPagesCheckbox.is(':checked') ? 1 : 0
 				}));
+				$.each($checked, function () {
+					$form.append($('<input/>', {
+						type: 'hidden',
+						name: 'bulk_id[]',
+						value: $(this).val()
+					}));
+				});
+
+				return true;
 			});
-		}
-	});
+
+			function appendBulkElementsToForm($form) {
+				var $allPagesCheckbox = $('.all-pages-checkbox input'),
+					$checked = $('.bulk-checkbox:checked');
+
+				$form.append($('<input/>', {
+					type: 'hidden',
+					name: 'all_pages',
+					value: $allPagesCheckbox.is(':checked') ? 1 : 0
+				}));
+				$.each($checked, function () {
+					var $input = $(this);
+					$form.append($('<input/>', {
+						type: 'hidden',
+						name: 'bulk_id[]',
+						value: $input.val()
+					}));
+				});
+			}
+		});
+	{/if}
 </script>
