@@ -20,6 +20,8 @@ class AdminFilter extends AbstractEntity implements IAggregateRoot
 	private $title;
 	/** @var string @required */
 	private $presenter;
+	/** @var bool @optional */
+	private $generic = false;
 	/** @var AdminFilterRuleCollection|AdminFilterRule[] */
 	private $rules;
 
@@ -46,6 +48,22 @@ class AdminFilter extends AbstractEntity implements IAggregateRoot
 	public function getPresenter(): string
 	{
 		return $this->presenter;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isGeneric(): bool
+	{
+		return $this->generic;
+	}
+
+	/**
+	 * @param bool $generic
+	 */
+	public function setGeneric(bool $generic): void
+	{
+		$this->generic = $generic;
 	}
 
 	/**
@@ -86,6 +104,7 @@ class AdminFilter extends AbstractEntity implements IAggregateRoot
 			'id' => $this->id,
 			'title' => $this->title,
 			'presenter' => $this->presenter,
+			'generic' => $this->generic,
 		];
 	}
 }

@@ -125,7 +125,10 @@ class Tabs extends BaseControl
 				}
 
 				$tab->activate();
-				$tab->makeDeletable();
+				if (!$savedFilter->isGeneric()) {
+					$tab->makeDeletable();
+				}
+
 				$activeTab = $tab;
 			}
 

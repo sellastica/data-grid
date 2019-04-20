@@ -15,6 +15,8 @@ class AdminFilterBuilder implements IBuilder
 	private $title;
 	/** @var string */
 	private $presenter;
+	/** @var bool */
+	private $generic = false;
 
 	/**
 	 * @param string $title
@@ -43,6 +45,24 @@ class AdminFilterBuilder implements IBuilder
 	public function getPresenter(): string
 	{
 		return $this->presenter;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getGeneric(): bool
+	{
+		return $this->generic;
+	}
+
+	/**
+	 * @param bool $generic
+	 * @return $this
+	 */
+	public function generic(bool $generic)
+	{
+		$this->generic = $generic;
+		return $this;
 	}
 
 	/**
