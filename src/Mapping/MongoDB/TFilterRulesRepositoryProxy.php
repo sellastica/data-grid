@@ -28,4 +28,16 @@ trait TFilterRulesRepositoryProxy
 	{
 		$this->getRepository()->updateByFilterRules($rules, $data);
 	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @param \Sellastica\Entity\Configuration|null $configuration
+	 */
+	public function deleteByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
+		\Sellastica\Entity\Configuration $configuration = null
+	): void
+	{
+		$this->getRepository()->deleteByFilterRules($rules, $configuration);
+	}
 }

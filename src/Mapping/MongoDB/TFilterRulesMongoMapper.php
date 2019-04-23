@@ -108,4 +108,20 @@ trait TFilterRulesMongoMapper
 			['$set' => $data]
 		);
 	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @param \Sellastica\Entity\Configuration|null $configuration
+	 */
+	public function deleteByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
+		\Sellastica\Entity\Configuration $configuration = null
+	): void
+	{
+		$filter = $this->rulesToMatch($rules);
+		$this->getCollection()->deleteMany(
+			$filter,
+			$this->getOptions($filter, $configuration)
+		);
+	}
 }

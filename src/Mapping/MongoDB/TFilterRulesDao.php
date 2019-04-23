@@ -31,4 +31,16 @@ trait TFilterRulesDao
 	{
 		$this->mapper->updateByFilterRules($rules, $data);
 	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @param \Sellastica\Entity\Configuration|null $configuration
+	 */
+	public function deleteByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
+		\Sellastica\Entity\Configuration $configuration = null
+	): void
+	{
+		$this->mapper->deleteByFilterRules($rules, $configuration);
+	}
 }
