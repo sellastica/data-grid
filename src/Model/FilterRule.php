@@ -25,7 +25,7 @@ class FilterRule
 	private $defaultValue;
 	/** @var string */
 	private $comparator = '=';
-	/** @var string */
+	/** @var string|null */
 	private $title;
 	/** @var string */
 	private $type;
@@ -143,18 +143,18 @@ class FilterRule
 	}
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getTitle(): string
+	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
 
 	/**
-	 * @param string $title
+	 * @param string|null $title
 	 * @return $this
 	 */
-	public function setTitle(string $title)
+	public function setTitle(?string $title)
 	{
 		$this->title = $title;
 		return $this;
