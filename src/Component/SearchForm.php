@@ -72,19 +72,12 @@ class SearchForm extends BaseControl
 	 */
 	public function processForm(Form $form, $values)
 	{
-		$params = [
-			'q' => $values->q,
-			DataGridControl::PARAM_FILTER_ID => null,
-			'page' => null,
-		];
-		foreach ($this->filterRules as $rule) { //if saved search is active and rules are not present in the url
-			if (!array_key_exists($rule->getKey(), $params)) {
-				$params[$rule->getKey()] = $rule->getValue(); //add param to url
-			}
-		}
-
 		$this->filterRules->addQuery($values->q);
-		$this->onSuccess($params);
+		$this->onSuccess([
+			'page' => null,
+			'q' => $values->q,
+			DataGridControl::PARAM_FILTER_ID => $this->presenter->getParameter('filterId'),
+		]);
 	}
 
 	/**
