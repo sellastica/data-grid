@@ -379,6 +379,7 @@ class DataGridControl extends BaseControl
 		$this->template->striped = !empty($params['striped']);
 		$this->template->grid = $this->dataGrid;
 		$this->template->displayTabs = $this->displayTabs;
+		$this->template->noResultsHtml = $params['noResultsHtml'] ?? null;
 	}
 
 	public function renderCardView()

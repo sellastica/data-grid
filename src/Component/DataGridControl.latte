@@ -266,6 +266,8 @@
 				<i class="fa fa-search"></i>
 				<p>{_admin.globals.no_results_found_heading}</p>
 			</div>
+		{elseif isset($noResultsHtml)}
+			{$noResultsHtml|noescape}
 		{else}
 			<div class="no-results">
 				<i class="fa fa-search"></i>
