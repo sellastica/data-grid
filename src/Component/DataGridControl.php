@@ -201,6 +201,14 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
+	 * @return FilterRuleCollection
+	 */
+	public function getFilterRules(): FilterRuleCollection
+	{
+		return $this->filterRules;
+	}
+
+	/**
 	 * Merges filter rules definition with saved search content
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
 	 * @param int $filterId
