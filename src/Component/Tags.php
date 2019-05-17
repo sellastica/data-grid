@@ -50,19 +50,16 @@ class Tags extends BaseControl
 				continue;
 			}
 
-			$url = $this->request->getUrl()
-				->setQueryParameter(DataGridControl::PARAM_FILTER_ID, null)
-				->setQueryParameter('page', null);
-			//if saved search is active and rules are not present in the url
+			$array = ['page' => null];
 			foreach ($this->filterRules as $filterRule) {
-				if (!$url->getQueryParameter($filterRule->getKey()) && $filterRule->isInTags()) {
-					$url->setQueryParameter($filterRule->getKey(), $filterRule->getValue()); //add param to url
+				if ($filterRule->isInTags()) {
+					$array[$filterRule->getKey()] = $filterRule->getKey() !== $rule->getKey() ? $filterRule->getValue() : null;
 				}
 			}
 
 			$tags[] = Tag::fromSearchCriterion(
 				$rule,
-				$url->setQueryParameter($rule->getKey(), null)
+				$this->presenter->link('this', $array)
 			);
 		}
 

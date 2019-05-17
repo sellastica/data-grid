@@ -19,6 +19,18 @@
 		</div>
 	</div>
 
+	{* item filter dropdown *}
+	{if $presenter->getComponent('itemFilter', false)}
+		{capture $modal}
+			{$presenter->getComponent('itemFilter')->render()}
+		{/capture}
+		{capture $title}{_admin.data_grid.filter.heading}{/capture}
+		{control modal, id => 'data-grid-filter', title => $title, content => $modal}
+	{/if}
+
+	{* search tags *}
+	{control searchTags}
+
 {else}
 
 	{* search tabs *}
@@ -265,8 +277,11 @@
 			{$noResultsHtml|noescape}
 		{elseif $presenter->isBetaAdmin()}
 			<div class="no-results pt-40 pb-40">
-				<i class="fa fa-search"></i>
-				<p>{_admin.globals.no_results_found_heading}</p>
+				<i class="fa fa-frown-o"></i>
+				<p>
+					{_admin.globals.no_results_found_heading}.<br>
+					Zkuste upravit podmínky pro filtrování.
+				</p>
 			</div>
 		{else}
 			<div class="no-results">

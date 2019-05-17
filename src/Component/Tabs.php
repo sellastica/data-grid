@@ -22,7 +22,7 @@ class Tabs extends BaseControl
 	private $user;
 	/** @var ITranslator */
 	private $translator;
-	/** @var FilterRuleCollection */
+	/** @var FilterRuleCollection|\Sellastica\DataGrid\Model\FilterRule[] */
 	private $filterRules;
 	/** @var \Sellastica\Entity\EntityManager */
 	private $em;
@@ -93,8 +93,11 @@ class Tabs extends BaseControl
 	{
 		$tabs = [];
 		$emptyCriteria = [];
-		foreach ($this->filterRules as $criterion => $title) {
-			$emptyCriteria[$criterion] = null;
+		foreach ($this->filterRules as $criterion => $rule) {
+			if (!$rule->isInTags()
+				&& $rule->getKey() !== 'q') {
+				$emptyCriteria[$criterion] = null;
+			}
 		}
 
 		//all results tab

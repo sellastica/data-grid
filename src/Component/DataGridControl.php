@@ -361,6 +361,14 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
+	 * @return \Sellastica\AdminUI\Component\FoundationModal
+	 */
+	protected function createComponentModal(): \Sellastica\AdminUI\Component\FoundationModal
+	{
+		return new \Sellastica\AdminUI\Component\FoundationModal(true);
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function displaySaveSearchForm(): bool
