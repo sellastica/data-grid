@@ -14,11 +14,11 @@
 						{if $tab->isActive()}
 							<a>
 								<span aria-selected="true">
-									{$tab->getTitle()}
+									{$tab->getTitle()|noescape}
 								</span>
 							</a>
 						{else}
-							<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
+							<a href="{$tab->getUrl()}">{$tab->getTitle()|noescape}</a>
 						{/if}
 					</li>
 				{/foreach}

@@ -5,7 +5,7 @@ class Tab
 {
 	/** @var int */
 	private $id;
-	/** @var string */
+	/** @var string|\Nette\Utils\Html */
 	private $title;
 	/** @var string|null */
 	private $url;
@@ -18,10 +18,10 @@ class Tab
 
 
 	/**
-	 * @param string $title
+	 * @param string|\Nette\Utils\Html $title
 	 * @param string $url
 	 */
-	public function __construct(string $title, string $url = null)
+	public function __construct($title, string $url = null)
 	{
 		$this->title = $title;
 		$this->url = $url;
@@ -44,9 +44,9 @@ class Tab
 	}
 
 	/**
-	 * @return string
+	 * @return string|\Nette\Utils\Html
 	 */
-	public function getTitle(): string
+	public function getTitle()
 	{
 		return $this->title;
 	}
