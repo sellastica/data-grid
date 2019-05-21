@@ -267,6 +267,14 @@ class DataGridControl extends BaseControl
 		return $control;
 	}
 
+	/**
+	 * @return Tabs|\Nette\ComponentModel\IComponent
+	 */
+	public function getTabsControl(): Tabs
+	{
+		return $this->getComponent('searchTabs');
+	}
+
 	public function hideAllResultsTab(): void
 	{
 		/** @var \Sellastica\DataGrid\Component\Tabs $tabs */
@@ -282,11 +290,11 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
-	 * @param string $title
+	 * @param string|\Nette\Utils\Html $title
 	 * @param string $url
 	 * @return \Sellastica\DataGrid\Model\Tab
 	 */
-	public function createTab(string $title, string $url): \Sellastica\DataGrid\Model\Tab
+	public function createTab($title, string $url): \Sellastica\DataGrid\Model\Tab
 	{
 		/** @var \Sellastica\DataGrid\Component\Tabs $tabs */
 		$tabs = $this->getComponent('searchTabs');

@@ -34,6 +34,8 @@ class Tabs extends BaseControl
 	private $displayAllResultsTab = true;
 	/** @var bool */
 	private $allResultsTabDeactivated = false;
+	/** @var bool */
+	private $genericTabsDeactivated = false;
 	/** @var Tab[] */
 	private $customTabs = [];
 
@@ -127,7 +129,10 @@ class Tabs extends BaseControl
 					$activeTab->deactivate();
 				}
 
-				$tab->activate();
+				if (!$this->genericTabsDeactivated) {
+					$tab->activate();
+				}
+
 				if (!$savedFilter->isGeneric()) {
 					$tab->makeDeletable();
 				}
@@ -160,11 +165,11 @@ class Tabs extends BaseControl
 	}
 
 	/**
-	 * @param string $title
+	 * @param string|Nette\Utils\Html $title
 	 * @param string $url
 	 * @return Tab
 	 */
-	public function createTab(string $title, string $url): Tab
+	public function createTab($title, string $url): Tab
 	{
 		$this->customTabs[] = $tab = new Tab($title, $url);
 		return $tab;
@@ -178,6 +183,11 @@ class Tabs extends BaseControl
 	public function deactivateAllResultsTab(): void
 	{
 		$this->allResultsTabDeactivated = true;
+	}
+
+	public function deactivateGenericTabs(): void
+	{
+		$this->genericTabsDeactivated = true;
 	}
 
 	/**

@@ -67,6 +67,14 @@ class Tab
 		return $this->active;
 	}
 
+	/**
+	 * @param bool $active
+	 */
+	public function setActive(bool $active): void
+	{
+		$this->active = $active;
+	}
+
 	public function activate(): void
 	{
 		$this->active = true;
