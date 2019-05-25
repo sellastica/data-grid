@@ -201,11 +201,14 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
+	 * @param bool $resolve
 	 * @return FilterRuleCollection
 	 */
-	public function getFilterRules(): FilterRuleCollection
+	public function getFilterRules(bool $resolve = false): FilterRuleCollection
 	{
-		return $this->filterRules;
+		return $resolve
+			? $this->dataGrid->resolveFilterRules($this->filterRules)
+			: $this->filterRules;
 	}
 
 	/**
