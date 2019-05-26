@@ -35,7 +35,7 @@ trait TFilterRulesMongoMapper
 	{
 		$this->getCollection()->updateMany(
 			\Sellastica\DataGrid\Mapping\MongoDB\RulesToMatchConverter::convert($rules),
-			['$set' => $data]
+			$data
 		);
 	}
 
