@@ -8,7 +8,7 @@
 		<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
 			<div class="panel panel-default card-view pa-0 product-card">
 				<div class="panel-wrapper collapse in">
-					<div class="panel-body pa-0{if $row->getData('hidden') || !$row->getData('status')->isApproved()} greyscale{/if}">
+					<div class="panel-body pa-0{if $row->getData('hidden') || $row->getData('greyscale')} greyscale{/if}">
 						<article class="col-item">
 							<div class="photo">
 
@@ -31,29 +31,30 @@
 
 								{* status and visibility *}
 								{var $status = $row->getData('status')}
-								{if $row->getData('supplier') || !$status->isApproved() || $row->getData('hidden')}
-									<div class="labels">
-										{* supplier *}
-										{if $row->getData('supplier')}
-											<span class="label label-default label-outline">
+								{if $status}
+									{if $row->getData('supplier') || !$status->isApproved() || $row->getData('hidden')}
+										<div class="labels">
+											{* supplier *}
+											{if $row->getData('supplier')}
+												<span class="label label-default label-outline">
 												{$row->getData('supplier')}
 											</span>
-										{/if}
+											{/if}
 
-										{* status *}
-										{if !$status->isApproved()}
-											<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
+											{* status *}
+											{if !$status->isApproved()}
+												<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
 												{_$status->getTitle()}
 											</span>
-										{/if}
+											{/if}
 
-										{* visibility *}
-										{if $row->getData('hidden')}
-											<span class="label label-default{if !$status->isApproved()} ml-5{/if}">Skrytý</span>
-										{/if}
-									</div>
+											{* visibility *}
+											{if $row->getData('hidden')}
+												<span class="label label-default{if !$status->isApproved()} ml-5{/if}">Skrytý</span>
+											{/if}
+										</div>
+									{/if}
 								{/if}
-
 							</div>
 							<div class="info">
 
@@ -72,13 +73,7 @@
 								{* availability *}
 								{if $row->getData('availability')}
 									<br>
-									{if $row->getData('availability')->isInStock()}
-										<span class="txt-success">
-											{$row->getData('availability')}
-										</span>
-									{else}
-										{$row->getData('availability')}
-									{/if}
+									{$row->getData('availability')}
 								{/if}
 
 								<div class="row no-gutters mt-15">
