@@ -8,12 +8,12 @@ trait TFilterRulesDao
 {
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
-	 * @param \Sellastica\Entity\Configuration $configuration
+	 * @param \Sellastica\Entity\Configuration|null $configuration
 	 * @return \Sellastica\Entity\Entity\EntityCollection
 	 */
 	public function findByFilterRules(
 		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
-		\Sellastica\Entity\Configuration $configuration
+		\Sellastica\Entity\Configuration $configuration = null
 	): \Sellastica\Entity\Entity\EntityCollection
 	{
 		$documents = $this->mapper->findByFilterRules($rules, $configuration);

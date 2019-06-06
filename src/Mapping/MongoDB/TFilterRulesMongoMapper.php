@@ -9,12 +9,12 @@ trait TFilterRulesMongoMapper
 {
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
-	 * @param \Sellastica\Entity\Configuration $configuration
+	 * @param \Sellastica\Entity\Configuration|null $configuration
 	 * @return array
 	 */
 	public function findByFilterRules(
 		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
-		\Sellastica\Entity\Configuration $configuration
+		\Sellastica\Entity\Configuration $configuration = null
 	): iterable
 	{
 		$filter = \Sellastica\DataGrid\Mapping\MongoDB\RulesToMatchConverter::convert($rules);

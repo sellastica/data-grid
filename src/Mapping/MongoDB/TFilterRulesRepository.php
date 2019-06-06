@@ -13,12 +13,12 @@ trait TFilterRulesRepository
 
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
-	 * @param \Sellastica\Entity\Configuration $configuration
+	 * @param \Sellastica\Entity\Configuration $configuration|null
 	 * @return \Sellastica\Entity\Entity\EntityCollection
 	 */
 	public function findByFilterRules(
 		\Sellastica\DataGrid\Model\FilterRuleCollection $rules,
-		\Sellastica\Entity\Configuration $configuration
+		\Sellastica\Entity\Configuration $configuration = null
 	): \Sellastica\Entity\Entity\EntityCollection
 	{
 		$entities = $this->dao->findByFilterRules($rules, $configuration);
