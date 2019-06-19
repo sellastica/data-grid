@@ -26,7 +26,7 @@
 
 								{* image *}
 								<a href="{$row->getData('link')|noescape}">
-									<img src="{$row->getData('image')|noescape}" class="img-responsive" alt="{$row->getData('title')|noescape}">
+									<img src="{$row->getData('image-placeholder')|noescape}" data-src="{$row->getData('image')|noescape}" n:class="$row->getData('image-class')" alt="{$row->getData('title')|noescape}" width="{$row->getData('image-width')}" height="{$row->getData('image-height')}">
 								</a>
 
 								{* status and visibility *}
