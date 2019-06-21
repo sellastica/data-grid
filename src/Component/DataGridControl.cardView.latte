@@ -12,18 +12,6 @@
 						<article class="col-item">
 							<div class="photo">
 
-								{* dropdown button *}
-								{if $dropdown = $row->getData('dropdown')}
-									<div class="options">
-										<div class="dropdown inline-block">
-											<a data-toggle="dropdown" class="dropdown-trigger">
-												<i class="fa fa-ellipsis-v"></i>
-											</a>
-											{$dropdown->getItemsHtml()|noescape}
-										</div>
-									</div>
-								{/if}
-
 								{* image *}
 								<a href="{$row->getData('link')|noescape}">
 									<img src="{$row->getData('image-placeholder')|noescape}" data-src="{$row->getData('image')|noescape}" n:class="$row->getData('image-class')" alt="{$row->getData('title')|noescape}" width="{$row->getData('image-width')}" height="{$row->getData('image-height')}">
@@ -85,21 +73,36 @@
 								{/if}
 
 								<div class="row no-gutters mt-15">
-									{* status *}
-									{*{var $status = $row->getData('status')}*}
+									{* buttons *}
 									<div class="col-sm-6">
-										{*<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">*}
-										{*{_$status->getTitle()}*}
-										{*</span>*}
+										<div class="show-on-hover">
+											<div class="btn-group dropup">
+												{* change status button *}
+												{var $status = $row->getData('status')}
+												{if $status && $row->getData('button-url')}
+													<a href="{$row->getData('button-url')}" class="ajax btn btn-default btn-sm btn-outline pl-15" type="button" data-loading-anim>
+														{if $status->isApproved()}
+															<i class="fa fa-thumbs-down"></i>
+														{else}
+															<i class="fa fa-thumbs-up"></i>
+														{/if}
+													</a>
+												{/if}
 
-										{*{if $row->getData('hidden')}*}
-										{*<span class="label label-default">Skrytý</span>*}
-										{*{/if}*}
+												{* dropup button *}
+												{if $dropdown = $row->getData('dropdown')}
+													<button type="button" class="btn btn-sm btn-default dropdown-toggle dropdown-toggle-split btn-outline pr-10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														<i class="fa fa-caret-down"></i>
+													</button>
+													{$dropdown->getItemsHtml()|noescape}
+												{/if}
+											</div>
+										</div>
 									</div>
 
 									{* price *}
 									<div class="col-sm-6 text-right">
-										<span class="head-font txt-primary font-16">
+										<span class="head-font txt-primary font-16 pt-5 inline-block">
 											{$row->getData('price')|noescape}
 										</span>
 									</div>
