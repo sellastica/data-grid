@@ -1,299 +1,305 @@
+<div class="data-grid data-grid-list-view">
 
-{* beta admin *}
-{if $presenter->isBetaAdmin()}
+	{* beta admin *}
+	{if $presenter->isBetaAdmin()}
 
-	<div class="row">
-		<div class="col-md-6">
+		<div class="row">
+			<div class="col-md-6">
 
-			{* search tabs *}
-			{if $displayTabs}
-				{control searchTabs}
-			{/if}
-		</div>
-		<div class="col-md-6">
-
-			{* search form *}
-			{if $grid->displaySearchForm() && ($grid->hasRows() || $grid->getFilterRules()->count())}
-				{control searchForm, grid => $grid}
-			{/if}
-		</div>
-	</div>
-
-	{* item filter dropdown *}
-	{if $presenter->getComponent('itemFilter', false)}
-		{capture $modal}
-			{$presenter->getComponent('itemFilter')->render()}
-		{/capture}
-		{capture $title}{_admin.data_grid.filter.heading}{/capture}
-		{control modal, id => 'data-grid-filter', title => $title, content => $modal}
-	{/if}
-
-	{* search tags *}
-	{control searchTags}
-
-{else}
-
-	{* search tabs *}
-	{if $displayTabs}
-		{control searchTabs}
-	{/if}
-
-
-	{* alpha admin *}
-	<div class="list-header">
-		<div class="grid-x grid-margin-x align-middle row">
-			<div class="cell {if $grid->displaySearchForm() && $presenter->getComponent('dataGrid')->getComponent('searchForm')->displaySearchInput()}small-12 medium-6 large-4 col-sm-12 col-md-6 col-lg-4{else}shrink{/if}">
+				{* search tabs *}
+				{if $displayTabs}
+					{control searchTabs}
+				{/if}
+			</div>
+			<div class="col-md-6">
 
 				{* search form *}
 				{if $grid->displaySearchForm() && ($grid->hasRows() || $grid->getFilterRules()->count())}
 					{control searchForm, grid => $grid}
 				{/if}
-
-
-				{* item filter dropdown *}
-				{if $presenter->getComponent('itemFilter', false)}
-					<div class="dropdown-pane large" id="search-dropdown" data-dropdown data-v-offset="10"
-						 data-position-class="bottom">
-						<div class="dropdown-pane-in">
-							{$presenter->getComponent('itemFilter')->render()}
-						</div>
-					</div>
-				{/if}
 			</div>
-
-
-			{* search tags *}
-			{control searchTags}
 		</div>
-	</div>
-{/if}
+
+		{* item filter dropdown *}
+		{if $presenter->getComponent('itemFilter', false)}
+			{capture $modal}
+				{$presenter->getComponent('itemFilter')->render()}
+			{/capture}
+			{capture $title}{_admin.data_grid.filter.heading}{/capture}
+			{control modal, id => 'data-grid-filter', title => $title, content => $modal}
+		{/if}
+
+		{* search tags *}
+	{control searchTags}
+
+	{else}
+
+		{* search tabs *}
+		{if $displayTabs}
+			{control searchTabs}
+		{/if}
 
 
-{* column definition *}
-{define column}
-	<td n:class="$column->getClass()"
-			{if $column->getColSpan()} colspan="{$column->getColSpan()}"{/if}
-			{if $column->getWidth()} width="{$column->getWidth()}"{/if}
-	>
-		{$column|noescape}
-	</td>
-{/define}
+		{* alpha admin *}
+		<div class="list-header">
+			<div class="grid-x grid-margin-x align-middle row">
+				<div class="cell {if $grid->displaySearchForm() && $presenter->getComponent('dataGrid')->getComponent('searchForm')->displaySearchInput()}small-12 medium-6 large-4 col-sm-12 col-md-6 col-lg-4{else}shrink{/if}">
+
+					{* search form *}
+					{if $grid->displaySearchForm() && ($grid->hasRows() || $grid->getFilterRules()->count())}
+						{control searchForm, grid => $grid}
+					{/if}
 
 
-<div class="list-body panel panel-default card-view">
-	{if $grid->hasRows()}
+					{* item filter dropdown *}
+					{if $presenter->getComponent('itemFilter', false)}
+						<div class="dropdown-pane large" id="search-dropdown" data-dropdown data-v-offset="10"
+							 data-position-class="bottom">
+							<div class="dropdown-pane-in">
+								{$presenter->getComponent('itemFilter')->render()}
+							</div>
+						</div>
+					{/if}
+				</div>
 
-		{* table *}
-		{form contentForm}
-			<div class="table-scroll">
-				<table class="list-table hover table table-hover" role="grid">
-					<colgroup>
-						{foreach $grid->getHeader()->getColumns() as $column}
-							<col/>
-						{/foreach}
-					</colgroup>
-					<thead>
-					<tr>
 
-						{* bulk actions in header *}
-						{if $grid->getBulkActions()}
-							<th class="select {$column->getClass()}">
+				{* search tags *}
+				{control searchTags}
+			</div>
+		</div>
+	{/if}
 
-								{* bulk actions *}
-								<div class="bulk-actions">
-									<ul>
-										{* main bulk checkbox *}
-										<li class="has-checkbox main-bulk-checkbox-wrapper">
-											{if $presenter->isBetaAdmin()}
-												<div class="checkbox checkbox-primary">
-													<input type="checkbox" class="main-bulk-checkbox" id="main-bulk-checkbox">
-													<label for="main-bulk-checkbox"></label>
-												</div>
-											{else}
-												<label class="control input-checkbox">
-													<input type="checkbox" class="main-bulk-checkbox">
-													<span class="control-indicator"></span>
-													<span class="if-visible"><span
-																class="checked-items-count">0</span> {_admin.data_grid.items_count_suffix}</span>
-													<i class="fa fa-angle-down if-hidden"></i>
-												</label>
-											{/if}
-										</li>
 
-										{* all pages bulk *}
-										{if $grid->isBulkAllPages()}
-											{if $presenter->isBetaAdmin()}
-												<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+	{* column definition *}
+	{define column}
+		<td n:class="$column->getClass()"
+				{if $column->getColSpan()} colspan="{$column->getColSpan()}"{/if}
+				{if $column->getWidth()} width="{$column->getWidth()}"{/if}
+		>
+			{$column|noescape}
+		</td>
+	{/define}
+
+
+	<div class="list-body panel panel-default card-view">
+		{if $grid->hasRows()}
+
+			{* table *}
+			{form contentForm}
+				<div class="table-scroll">
+					<table class="list-table hover table table-hover" role="grid">
+						<colgroup>
+							{foreach $grid->getHeader()->getColumns() as $column}
+								<col/>
+							{/foreach}
+						</colgroup>
+						<thead>
+						<tr>
+
+							{* bulk actions in header *}
+							{if $grid->getBulkActions()}
+								<th class="select {$column->getClass()}">
+
+									{* bulk actions *}
+									<div class="bulk-actions">
+										<ul>
+											{* main bulk checkbox *}
+											<li class="has-checkbox main-bulk-checkbox-wrapper">
+												{if $presenter->isBetaAdmin()}
 													<div class="checkbox checkbox-primary">
-														<input n:name="all_pages">
-														<label n:name="all_pages">{_admin.data_grid.all_pages}</label>
+														<input type="checkbox" class="main-bulk-checkbox" id="main-bulk-checkbox">
+														<label for="main-bulk-checkbox"></label>
 													</div>
-												</li>
-											{else}
-												<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+												{else}
 													<label class="control input-checkbox">
-														<input n:name="all_pages">
+														<input type="checkbox" class="main-bulk-checkbox">
 														<span class="control-indicator"></span>
-														{_admin.data_grid.all_pages}
+														<span class="if-visible"><span
+																	class="checked-items-count">0</span> {_admin.data_grid.items_count_suffix}</span>
+														<i class="fa fa-angle-down if-hidden"></i>
 													</label>
-												</li>
-											{/if}
-										{/if}
+												{/if}
+											</li>
 
-										{* bulk actions menu *}
-										<li class="if-visible hover bulk-actions-button">
-											{if $presenter->isBetaAdmin()}
-												<div class="dropdown inline-block dropdown-animating">
-													<a data-toggle="dropdown" aria-expanded="false">
+											{* all pages bulk *}
+											{if $grid->isBulkAllPages()}
+												{if $presenter->isBetaAdmin()}
+													<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+														<div class="checkbox checkbox-primary">
+															<input n:name="all_pages">
+															<label n:name="all_pages">{_admin.data_grid.all_pages}</label>
+														</div>
+													</li>
+												{else}
+													<li class="has-checkbox hover all-pages-checkbox" style="display: none">
+														<label class="control input-checkbox">
+															<input n:name="all_pages">
+															<span class="control-indicator"></span>
+															{_admin.data_grid.all_pages}
+														</label>
+													</li>
+												{/if}
+											{/if}
+
+											{* bulk actions menu *}
+											<li class="if-visible hover bulk-actions-button">
+												{if $presenter->isBetaAdmin()}
+													<div class="dropdown inline-block dropdown-animating">
+														<a data-toggle="dropdown" aria-expanded="false">
+															{_admin.data_grid.bulk_actions}
+															<i class="fa fa-angle-down ml-5"></i>
+														</a>
+														<ul class="dropdown-menu dropdown-menu-right animated nonecase-font bulk-menu" id="5cb7fc26e68e2" data-close-on-click="true" data-v-offset="5" role="menu">
+															{foreach $grid->getBulkActions() as $action}
+																<li>
+																	<a
+																			{if $action['action']}href="{$action['action']}"{/if}
+																			{if $action['confirm']}
+																				{* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																				data-confirm
+																			{/if}
+																			{foreach $action['data'] as $key => $value}
+																				data-{$key}="{$value}"
+																			{/foreach}
+																	>
+																		{if $action['icon']}
+																			<i class="{$action['icon']}"></i>
+																		{/if}
+																		{$action['title']}
+																	</a>
+																</li>
+															{/foreach}
+														</ul>
+													</div>
+												{else}
+													<a data-toggle="bulk-actions-dropdown">
 														{_admin.data_grid.bulk_actions}
-														<i class="fa fa-angle-down ml-5"></i>
+														<i class="fa fa-angle-down"></i>
 													</a>
-													<ul class="dropdown-menu dropdown-menu-right animated nonecase-font bulk-menu" id="5cb7fc26e68e2" data-close-on-click="true" data-v-offset="5" role="menu">
+													<ul class="menu dropdown-pane button-dropdown bottom no-padding bulk-menu"
+														data-dropdown
+														data-close-on-click="true"
+														data-v-offset="10" id="bulk-actions-dropdown">
 														{foreach $grid->getBulkActions() as $action}
 															<li>
 																<a
 																		{if $action['action']}href="{$action['action']}"{/if}
-																		{if $action['confirm']}
-																			{* dont know why, but confirmation dialog on "confirm" class is ignored *}
-																			data-confirm
-																		{/if}
+																		{* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																		{if $action['confirm']} data-confirm{/if}
 																		{foreach $action['data'] as $key => $value}
 																			data-{$key}="{$value}"
 																		{/foreach}
 																>
-																	{if $action['icon']}
-																		<i class="{$action['icon']}"></i>
-																	{/if}
 																	{$action['title']}
 																</a>
 															</li>
 														{/foreach}
 													</ul>
-												</div>
-											{else}
-												<a data-toggle="bulk-actions-dropdown">
-													{_admin.data_grid.bulk_actions}
-													<i class="fa fa-angle-down"></i>
-												</a>
-												<ul class="menu dropdown-pane button-dropdown bottom no-padding bulk-menu"
-													data-dropdown
-													data-close-on-click="true"
-													data-v-offset="10" id="bulk-actions-dropdown">
-													{foreach $grid->getBulkActions() as $action}
-														<li>
-															<a
-																	{if $action['action']}href="{$action['action']}"{/if}
-																	{* dont know why, but confirmation dialog on "confirm" class is ignored *}
-																	{if $action['confirm']} data-confirm{/if}
-																	{foreach $action['data'] as $key => $value}
-																		data-{$key}="{$value}"
-																	{/foreach}
-															>
-																{$action['title']}
-															</a>
-														</li>
-													{/foreach}
-												</ul>
-											{/if}
-										</li>
-									</ul>
-								</div>
-							</th>
-						{/if}
-
-
-						{* header columns *}
-						{foreach $grid->getHeader()->getColumns() as $column}
-							{if $column->isText()}
-								<th n:class="$column->getClass()">
-									{$column->getTitle()}
-								</th>
-							{elseif $column->isSortable()}
-								<th class="sorting-header{if $column->isVisible()} active{/if} {$column->getClass()}">
-									<a href="{$column->getUrl()}">
-										{$column->getTitle()}
-										{if $column->isVisible()}
-											<i class="fa fa-caret-{$column->isSortAsc() ? 'up' : 'down'}"></i>
-										{/if}
-									</a>
+												{/if}
+											</li>
+										</ul>
+									</div>
 								</th>
 							{/if}
-						{/foreach}
-					</tr>
-					</thead>
-					<tbody>
 
 
-					{* grid rows *}
-					{formContainer content}
-						{foreach $grid->getRows() as $row}
-							<tr n:class="$row->getClass()"{if $row->getHtmlId()} id="{$row->getHtmlId()}{/if}">
+							{* header columns *}
+							{foreach $grid->getHeader()->getColumns() as $column}
+								{if $column->isText()}
+									<th n:class="$column->getClass()">
+										{$column->getTitle()}
+									</th>
+								{elseif $column->isSortable()}
+									<th class="sorting-header{if $column->isVisible()} active{/if} {$column->getClass()}">
+										<a href="{$column->getUrl()}">
+											{$column->getTitle()}
+											{if $column->isVisible()}
+												<i class="fa fa-caret-{$column->isSortAsc() ? 'up' : 'down'}"></i>
+											{/if}
+										</a>
+									</th>
+								{/if}
+							{/foreach}
+						</tr>
+						</thead>
+						<tbody>
 
-								{* row if bulk actions are activated *}
-								{if $row->getBulkId()}
-									{formContainer $row->getBulkId()}
 
-										{* bulk actions column *}
-										{if $grid->getBulkActions()}
-											<td class="select">
-												{if $presenter->isBetaAdmin()}
-													<div class="checkbox checkbox-primary">
-														<input n:name="bulk_id" value="{$row->getBulkId()}">
-														<label n:name="bulk_id"></label>
-													</div>
-												{else}
-													<label class="control input-checkbox">
-														<input n:name="bulk_id" value="{$row->getBulkId()}">
-														<div class="control-indicator"></div>
-													</label>
-												{/if}
-											</td>
-										{/if}
+						{* grid rows *}
+						{formContainer content}
+							{foreach $grid->getRows() as $row}
+								<tr n:class="$row->getClass()"{if $row->getHtmlId()} id="{$row->getHtmlId()}{/if}">
+
+									{* row if bulk actions are activated *}
+									{if $row->getBulkId()}
+										{formContainer $row->getBulkId()}
+
+											{* bulk actions column *}
+											{if $grid->getBulkActions()}
+												<td class="select">
+													{if $presenter->isBetaAdmin()}
+														<div class="checkbox checkbox-primary">
+															<input n:name="bulk_id" value="{$row->getBulkId()}">
+															<label n:name="bulk_id"></label>
+														</div>
+													{else}
+														<label class="control input-checkbox">
+															<input n:name="bulk_id" value="{$row->getBulkId()}">
+															<div class="control-indicator"></div>
+														</label>
+													{/if}
+												</td>
+											{/if}
+
+											{* columns *}
+											{foreach $row->getColumns() as $column}
+												{include #column}
+											{/foreach}
+										{/formContainer}
+
+									{else}
 
 										{* columns *}
 										{foreach $row->getColumns() as $column}
 											{include #column}
 										{/foreach}
-									{/formContainer}
-
-								{else}
-
-									{* columns *}
-									{foreach $row->getColumns() as $column}
-										{include #column}
-									{/foreach}
-								{/if}
-							</tr>
-						{/foreach}
-					{/formContainer}
-					</tbody>
-				</table>
-			</div>
-		{/form}
-	{else}
-
-		{* no results found *}
-		{if isset($noResultsHtml)}
-			{$noResultsHtml|noescape}
-		{elseif $presenter->isBetaAdmin()}
-			<div class="no-results pt-40 pb-40">
-				<i class="fa fa-frown-o"></i>
-				<p>
-					{_admin.globals.no_results_found_heading}.<br>
-					Zkuste upravit podmínky pro filtrování.
-				</p>
-			</div>
+									{/if}
+								</tr>
+							{/foreach}
+						{/formContainer}
+						</tbody>
+					</table>
+				</div>
+			{/form}
 		{else}
-			<div class="no-results">
-				<i class="fa fa-search"></i>
-				<h2>{_admin.globals.no_results_found_heading}</h2>
-			</div>
+
+			{* no results found *}
+			{if isset($noResultsHtml)}
+				{$noResultsHtml|noescape}
+			{elseif $presenter->isBetaAdmin()}
+				<div class="no-results pt-40 pb-40">
+					<i class="fa fa-frown-o"></i>
+					<p>
+						{_admin.globals.no_results_found_heading}.<br>
+						Zkuste upravit podmínky pro filtrování.
+					</p>
+				</div>
+			{else}
+				<div class="no-results">
+					<i class="fa fa-search"></i>
+					<h2>{_admin.globals.no_results_found_heading}</h2>
+				</div>
+			{/if}
 		{/if}
-	{/if}
+	</div>
 </div>
 
+
+{* pagination *}
 {control pagination}
 
+
+{* save search form *}
 {if $control->displaySaveSearchForm()}
 	{control saveSearchForm}
 {/if}
@@ -311,158 +317,158 @@
 
 	//grid bulk actions
 	{if $presenter->isBetaAdmin()}
-		$(function () {
-			$.fn.initBulkActions = function () {
-				return this.each(function () {
-					var $el = $(this);
-					var newDiv = $('<div />', {
-						'css': {
-							'height': $el.height(),
-							'width': '100%',
-						}
-					});
-					$el.wrapInner(newDiv);
-				});
-			};
-			$('th.select').initBulkActions();
-
-			function toggleBulkActions() {
-				var $bulks = $('.bulk-actions');
-				if ($('.bulk-checkbox:checked').length) {
-					if (!$bulks.hasClass('visible')) {
-						$bulks.addClass('visible');
-						$bulks.closest('tr').addClass('only-bulk-actions');
+	$(function () {
+		$.fn.initBulkActions = function () {
+			return this.each(function () {
+				var $el = $(this);
+				var newDiv = $('<div />', {
+					'css': {
+						'height': $el.height(),
+						'width': '100%',
 					}
-				} else {
-					$bulks.removeClass('visible');
-					$bulks.closest('tr').removeClass('only-bulk-actions');
-				}
-			}
-
-			function updateItemsCount($table) {
-				var $this = $(this),
-					$itemsCount = $table.find('.checked-items-count'),
-					$allPagesCheckbox = $table.find('.all-pages-checkbox input');
-
-				if ($allPagesCheckbox.is(':checked')) {
-					$itemsCount.text($('.pagination').data('items-count'));
-				} else {
-					$itemsCount.text($table.find('.bulk-checkbox:checked').length);
-				}
-			}
-
-			$('.main-bulk-checkbox').click(function () {
-				var $this = $(this),
-					$table = $this.closest('table'),
-					$checkboxes = $table.find('.bulk-checkbox'),
-					$allPages = $table.find('.all-pages-checkbox');
-
-				if ($this.prop('checked') === true) {
-					$checkboxes.each(function () {
-						$(this).prop('checked', true);
-					});
-					$allPages.show();
-				} else {
-					$checkboxes.each(function () {
-						$(this).prop('checked', false);
-					});
-					$allPages.hide();
-				}
-
-				toggleBulkActions();
-				updateItemsCount($table);
-			});
-
-			$('.bulk-checkbox').click(function () {
-				var $table = $(this).closest('table'),
-					$checkboxes = $table.find('.bulk-checkbox'),
-					$checked = $table.find('.bulk-checkbox:checked'),
-					$mainCheckbox = $table.find('.main-bulk-checkbox'),
-					$allPagesCheckbox = $table.find('.all-pages-checkbox');
-
-				if ($checkboxes.length === $checked.length) { //all checked
-					$mainCheckbox.prop('checked', true);
-					$allPagesCheckbox.show();
-				} else {
-					$mainCheckbox.prop('checked', false);
-					$allPagesCheckbox.find('input').prop('checked', false);
-					$allPagesCheckbox.hide();
-				}
-
-				toggleBulkActions();
-				updateItemsCount($table);
-			});
-
-			$('.all-pages-checkbox').click(function () {
-				updateItemsCount($(this).closest('table'));
-			});
-
-			//bulk actions dropdown action link
-			$('.bulk-menu > li > a').click(function (e) {
-				e.preventDefault();
-				var $this = $(this);
-
-				if ($this.attr('href') === undefined) {
-					return;
-				}
-
-				//confirmation dialog
-				if ($this.attr('data-confirm') !== undefined) {
-					if (!window.confirm('Jste si jistý?')) {
-						return false;
-					}
-				}
-
-				var $form = $('#data-grid-content-form'),
-					$formAction = $('#data-grid-bulk-action');
-
-				if ($formAction.length) {
-					$formAction.val($this.attr('href'));
-				}
-
-				$form.submit();
-			});
-
-			//bulk actions modal form
-			$('.bulk-actions-form').submit(function (e) {
-				var $form = $(this),
-					$allPagesCheckbox = $('.all-pages-checkbox input'),
-					$checked = $('.bulk-checkbox:checked');
-
-				$form.append($('<input/>', {
-					type: 'hidden',
-					name: 'all_pages',
-					value: $allPagesCheckbox.is(':checked') ? 1 : 0
-				}));
-				$.each($checked, function () {
-					$form.append($('<input/>', {
-						type: 'hidden',
-						name: 'bulk_id[]',
-						value: $(this).val()
-					}));
 				});
-
-				return true;
+				$el.wrapInner(newDiv);
 			});
+		};
+		$('th.select').initBulkActions();
 
-			function appendBulkElementsToForm($form) {
-				var $allPagesCheckbox = $('.all-pages-checkbox input'),
-					$checked = $('.bulk-checkbox:checked');
-
-				$form.append($('<input/>', {
-					type: 'hidden',
-					name: 'all_pages',
-					value: $allPagesCheckbox.is(':checked') ? 1 : 0
-				}));
-				$.each($checked, function () {
-					var $input = $(this);
-					$form.append($('<input/>', {
-						type: 'hidden',
-						name: 'bulk_id[]',
-						value: $input.val()
-					}));
-				});
+		function toggleBulkActions() {
+			var $bulks = $('.bulk-actions');
+			if ($('.bulk-checkbox:checked').length) {
+				if (!$bulks.hasClass('visible')) {
+					$bulks.addClass('visible');
+					$bulks.closest('tr').addClass('only-bulk-actions');
+				}
+			} else {
+				$bulks.removeClass('visible');
+				$bulks.closest('tr').removeClass('only-bulk-actions');
 			}
+		}
+
+		function updateItemsCount($table) {
+			var $this = $(this),
+				$itemsCount = $table.find('.checked-items-count'),
+				$allPagesCheckbox = $table.find('.all-pages-checkbox input');
+
+			if ($allPagesCheckbox.is(':checked')) {
+				$itemsCount.text($('.pagination').data('items-count'));
+			} else {
+				$itemsCount.text($table.find('.bulk-checkbox:checked').length);
+			}
+		}
+
+		$('.main-bulk-checkbox').click(function () {
+			var $this = $(this),
+				$table = $this.closest('table'),
+				$checkboxes = $table.find('.bulk-checkbox'),
+				$allPages = $table.find('.all-pages-checkbox');
+
+			if ($this.prop('checked') === true) {
+				$checkboxes.each(function () {
+					$(this).prop('checked', true);
+				});
+				$allPages.show();
+			} else {
+				$checkboxes.each(function () {
+					$(this).prop('checked', false);
+				});
+				$allPages.hide();
+			}
+
+			toggleBulkActions();
+			updateItemsCount($table);
 		});
+
+		$('.bulk-checkbox').click(function () {
+			var $table = $(this).closest('table'),
+				$checkboxes = $table.find('.bulk-checkbox'),
+				$checked = $table.find('.bulk-checkbox:checked'),
+				$mainCheckbox = $table.find('.main-bulk-checkbox'),
+				$allPagesCheckbox = $table.find('.all-pages-checkbox');
+
+			if ($checkboxes.length === $checked.length) { //all checked
+				$mainCheckbox.prop('checked', true);
+				$allPagesCheckbox.show();
+			} else {
+				$mainCheckbox.prop('checked', false);
+				$allPagesCheckbox.find('input').prop('checked', false);
+				$allPagesCheckbox.hide();
+			}
+
+			toggleBulkActions();
+			updateItemsCount($table);
+		});
+
+		$('.all-pages-checkbox').click(function () {
+			updateItemsCount($(this).closest('table'));
+		});
+
+		//bulk actions dropdown action link
+		$('.bulk-menu > li > a').click(function (e) {
+			e.preventDefault();
+			var $this = $(this);
+
+			if ($this.attr('href') === undefined) {
+				return;
+			}
+
+			//confirmation dialog
+			if ($this.attr('data-confirm') !== undefined) {
+				if (!window.confirm('Jste si jistý?')) {
+					return false;
+				}
+			}
+
+			var $form = $('#data-grid-content-form'),
+				$formAction = $('#data-grid-bulk-action');
+
+			if ($formAction.length) {
+				$formAction.val($this.attr('href'));
+			}
+
+			$form.submit();
+		});
+
+		//bulk actions modal form
+		$('.bulk-actions-form').submit(function (e) {
+			var $form = $(this),
+				$allPagesCheckbox = $('.all-pages-checkbox input'),
+				$checked = $('.bulk-checkbox:checked');
+
+			$form.append($('<input/>', {
+				type: 'hidden',
+				name: 'all_pages',
+				value: $allPagesCheckbox.is(':checked') ? 1 : 0
+			}));
+			$.each($checked, function () {
+				$form.append($('<input/>', {
+					type: 'hidden',
+					name: 'bulk_id[]',
+					value: $(this).val()
+				}));
+			});
+
+			return true;
+		});
+
+		function appendBulkElementsToForm($form) {
+			var $allPagesCheckbox = $('.all-pages-checkbox input'),
+				$checked = $('.bulk-checkbox:checked');
+
+			$form.append($('<input/>', {
+				type: 'hidden',
+				name: 'all_pages',
+				value: $allPagesCheckbox.is(':checked') ? 1 : 0
+			}));
+			$.each($checked, function () {
+				var $input = $(this);
+				$form.append($('<input/>', {
+					type: 'hidden',
+					name: 'bulk_id[]',
+					value: $input.val()
+				}));
+			});
+		}
+	});
 	{/if}
 </script>
