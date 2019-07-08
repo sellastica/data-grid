@@ -28,8 +28,8 @@
 					{* all pages bulk *}
 					<li class="pt-5">
 						{if $grid->isBulkAllPages()}
-							<div class="checkbox checkbox-primary all-pages-checkbox">
-								<input n:name="all_pages">
+							<div class="checkbox checkbox-primary all-pages-checkbox-wrapper">
+								<input n:name="all_pages" class="all-pages-checkbox">
 								<label n:name="all_pages">{_admin.data_grid.all_pages}</label>
 							</div>
 						{/if}
@@ -53,14 +53,14 @@
 								<div class="btn-group">
 									{foreach $grid->getBulkActions() as $action}
 										{if $action['icon']}
-											<a class="btn btn-default btn-outline"
+											<a class="btn btn-default btn-outline bulk-action-button"
 											   {if $action['action']}href="{$action['action']}"{/if}
 													{if $action['confirm']}
 														{* dont know why, but confirmation dialog on "confirm" class is ignored *}
 														data-confirm
 													{/if}
 													{foreach $action['data'] as $key => $value}
-														data-{$key}="{$value}"
+														data-{$key}="{$value|noescape}"
 													{/foreach}
 											   title="{$action['title']}"
 											>
@@ -78,7 +78,7 @@
 										Další
 										<span class="caret"></span>
 									</button>
-									<ul role="menu" class="dropdown-menu">
+									<ul role="menu" class="dropdown-menu bulk-menu">
 										{foreach $grid->getBulkActions() as $action}
 											{if !$action['icon']}
 												<li>
@@ -89,7 +89,7 @@
 																data-confirm
 															{/if}
 															{foreach $action['data'] as $key => $value}
-																data-{$key}="{$value}"
+																data-{$key}="{$value|noescape}"
 															{/foreach}
 													>
 														{$action['title']}
@@ -118,7 +118,7 @@
 										<div class="photo">
 
 											{* row if bulk actions are activated *}
-											{if $row->getBulkId()}
+											{if $grid->getBulkActions() && $row->getBulkId()}
 												{formContainer $row->getBulkId()}
 													<div class="left-top-corner">
 														<div class="checkbox checkbox-primary">
@@ -151,15 +151,15 @@
 														{* supplier *}
 														{if $row->getData('supplier')}
 															<span class="label label-default label-outline">
-												{$row->getData('supplier')}
-											</span>
+																{$row->getData('supplier')}
+															</span>
 														{/if}
 
 														{* status *}
 														{if !$status->isApproved()}
 															<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
-												{_$status->getTitle()}
-											</span>
+																{_$status->getTitle()}
+															</span>
 														{/if}
 
 														{* visibility *}
@@ -175,20 +175,28 @@
 											{* title *}
 											<h6 class="mb-10">
 												<a href="{$row->getData('link')|noescape}" class="underline-hover">{$row->getData('title')|noescape}</a>
-												{if $row->getData('options')}
+												{if $row->getData('subtitle')}
 													<br>
 													<em class="weight-300 txt-grey italic">
-														{foreach $row->getData('options') as $option => $value}
-															{$value}{sep}, {/sep}
-														{/foreach}
+														{if is_iterable($row->getData('subtitle'))}
+															{foreach $row->getData('subtitle') as $value}
+																{$value}{sep}, {/sep}
+															{/foreach}
+														{else}
+															{$row->getData('subtitle')}
+														{/if}
 													</em>
 												{/if}
 											</h6>
 
 											{* code *}
 											<span>
-									{$row->getData('code')}
-								</span>
+												{if $row->getData('code')}
+													{$row->getData('code')}
+												{else}
+													&nbsp;
+												{/if}
+											</span>
 
 											{* availability *}
 											{if $row->getData('availability')}
@@ -226,9 +234,9 @@
 
 												{* price *}
 												<div class="col-sm-6 text-right">
-										<span class="head-font txt-primary font-16 pt-5 inline-block">
-											{$row->getData('price')|noescape}
-										</span>
+													<span class="head-font txt-primary font-16 pt-5 inline-block">
+														{$row->getData('price')|noescape}
+													</span>
 												</div>
 											</div>
 										</div>
@@ -263,7 +271,7 @@
 		function updateItemsCount($wrapper) {
 			var $this = $(this),
 				$itemsCount = $wrapper.find('.checked-items-count'),
-				$allPagesCheckbox = $wrapper.find('.all-pages-checkbox input');
+				$allPagesCheckbox = $wrapper.find('.all-pages-checkbox');
 
 			if ($allPagesCheckbox.is(':checked')) {
 				$itemsCount.text($('.pagination').data('items-count'));
@@ -277,18 +285,18 @@
 				$checked = $this.prop('checked'),
 				$wrapper = $this.closest('.data-grid'),
 				$checkboxes = $wrapper.find('.bulk-checkbox'),
-				$allPages = $wrapper.find('.all-pages-checkbox');
+				$allPagesWrapper = $wrapper.find('.all-pages-checkbox-wrapper');
 
 			if ($checked === true) {
 				$checkboxes.each(function () {
 					$(this).prop('checked', true);
 				});
-				$allPages.show();
+				$allPagesWrapper.show();
 			} else {
 				$checkboxes.each(function () {
 					$(this).prop('checked', false);
 				});
-				$allPages.hide();
+				$allPagesWrapper.hide();
 			}
 
 			toggleBulkActions($wrapper, $checked);
@@ -301,27 +309,28 @@
 				$checkboxes = $wrapper.find('.bulk-checkbox'),
 				$checkedCheckboxes = $wrapper.find('.bulk-checkbox:checked'),
 				$mainCheckbox = $wrapper.find('.main-bulk-checkbox'),
-				$allPagesCheckbox = $wrapper.find('.all-pages-checkbox');
+				$allPagesCheckboxWrapper = $wrapper.find('.all-pages-checkbox-wrapper'),
+				$allPagesCheckbox = $allPagesCheckboxWrapper.find('.all-pages-checkbox');
 
 			if ($checkboxes.length === $checkedCheckboxes.length) { //all checked
 				$mainCheckbox.prop('checked', true);
-				$allPagesCheckbox.show();
+				$allPagesCheckboxWrapper.show();
 			} else {
 				$mainCheckbox.prop('checked', false);
-				$allPagesCheckbox.find('input').prop('checked', false);
-				$allPagesCheckbox.hide();
+				$allPagesCheckbox.prop('checked', false);
+				$allPagesCheckboxWrapper.hide();
 			}
 
 			toggleBulkActions($wrapper, $checkedCheckboxes.length > 0);
 			updateItemsCount($wrapper);
 		});
 
-		$('.all-pages-checkbox').click(function () {
+		$('.all-pages-checkbox-wrapper').click(function () {
 			updateItemsCount($(this).closest('.data-grid'));
 		});
 
 		//bulk actions dropdown action link
-		$('.bulk-menu > li > a').click(function (e) {
+		$('.bulk-menu > li > a, .bulk-action-button').click(function (e) {
 			e.preventDefault();
 			var $this = $(this);
 
@@ -349,7 +358,7 @@
 		//bulk actions modal form
 		$('.bulk-actions-form').submit(function (e) {
 			var $form = $(this),
-				$allPagesCheckbox = $('.all-pages-checkbox input'),
+				$allPagesCheckbox = $('.all-pages-checkbox'),
 				$checked = $('.bulk-checkbox:checked');
 
 			$form.append($('<input/>', {
@@ -368,24 +377,14 @@
 			return true;
 		});
 
-		function appendBulkElementsToForm($form) {
-			var $allPagesCheckbox = $('.all-pages-checkbox input'),
-				$checked = $('.bulk-checkbox:checked');
-
-			$form.append($('<input/>', {
-				type: 'hidden',
-				name: 'all_pages',
-				value: $allPagesCheckbox.is(':checked') ? 1 : 0
-			}));
-			$.each($checked, function () {
-				var $input = $(this);
-				$form.append($('<input/>', {
-					type: 'hidden',
-					name: 'bulk_id[]',
-					value: $input.val()
-				}));
-			});
-		}
+		$('.all-pages-checkbox').click(function () {
+			var $this = $(this),
+				$actionItems = $('*[data-all-pages="0"]');
+			if ($this.prop('checked')) {
+				$actionItems.addClass('disabled');
+			} else {
+				$actionItems.removeClass('disabled');
+			}
+		});
 	});
-
 </script>

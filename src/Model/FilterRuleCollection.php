@@ -231,7 +231,9 @@ class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess, \Countab
 	 */
 	public function offsetUnset($offset)
 	{
-		throw new \Exception('Operation not allowed');
+		if (isset($this->rules[$offset])) {
+			unset($this->rules[$offset]);
+		}
 	}
 
 	/**
@@ -240,5 +242,10 @@ class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess, \Countab
 	public function count(): int
 	{
 		return sizeof($this->rules);
+	}
+
+	public function clear(): void
+	{
+		$this->rules = [];
 	}
 }

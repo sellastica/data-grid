@@ -26,6 +26,21 @@ trait TFilterRulesMongoMapper
 
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @return int
+	 */
+	public function findCountByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	): int
+	{
+		$filter = \Sellastica\DataGrid\Mapping\MongoDB\RulesToMatchConverter::convert($rules);
+		return $this->getCollection()->countDocuments(
+			$filter,
+			$this->getOptions($filter)
+		);
+	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
 	 * @param array $data
 	 */
 	public function updateByFilterRules(

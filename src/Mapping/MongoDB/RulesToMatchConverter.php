@@ -11,6 +11,7 @@ class RulesToMatchConverter
 	{
 		$match = [];
 		foreach ($rules->getActiveRules(\Sellastica\DataGrid\Model\FilterRule:: AND) as $rule) {
+			/** @var \Sellastica\DataGrid\Model\FilterRule $rule */
 			if (!$rule->isColumnFilter()) {
 				continue;
 			}
@@ -18,7 +19,9 @@ class RulesToMatchConverter
 			if ($rule->getMapping()) {
 				$column = $rule->getMapping();
 			} else {
-				$column = \Sellastica\Utils\Strings::toCamelCase(preg_replace('~(.+)(_min|_max)~', '$1', $rule->getKey()));
+				$column = $rule->getKey() === '_id'
+					? $rule->getKey()
+					: \Sellastica\Utils\Strings::toCamelCase(preg_replace('~(.+)(_min|_max)~', '$1', $rule->getKey()));
 			}
 
 			switch ($rule->getType()) {
@@ -30,7 +33,7 @@ class RulesToMatchConverter
 					throw new \Nette\NotImplementedException();
 					break;
 				case \Sellastica\DataGrid\Model\FilterRule::ENUM:
-					throw new \Nette\NotImplementedException();
+					$match[$column] = ['$in' => $rule->getValue()];
 					break;
 				case \Sellastica\DataGrid\Model\FilterRule::SET:
 					throw new \Nette\NotImplementedException();

@@ -27,6 +27,17 @@ trait TFilterRulesRepository
 
 	/**
 	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	 * @return int
+	 */
+	public function findCountByFilterRules(
+		\Sellastica\DataGrid\Model\FilterRuleCollection $rules
+	): int
+	{
+		return $this->dao->findCountByFilterRules($rules);
+	}
+
+	/**
+	 * @param \Sellastica\DataGrid\Model\FilterRuleCollection $rules
 	 * @param array $data
 	 */
 	public function updateByFilterRules(

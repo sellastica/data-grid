@@ -169,6 +169,14 @@ class FilterRule
 	}
 
 	/**
+	 * @param mixed $value
+	 */
+	public function setValue($value): void
+	{
+		$this->value = $value;
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function getResolvedValue()
