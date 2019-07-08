@@ -1,254 +1,271 @@
 {* search tabs *}
 {if $displayTabs}
-	{control searchTabs}
+    {control searchTabs}
 {/if}
 
 
 {* bulk actions *}
 <div class="data-grid data-grid-card-view">
-	{form contentForm}
-		{if $grid->getBulkActions()}
-			<div class="bulk-actions">
+    {if $grid->hasRows()}
+        {form contentForm}
+            {if $grid->getBulkActions()}
+				<div class="bulk-actions">
 
-				{* products count *}
-				<span class="pull-right pt-10">
+                    {* products count *}
+					<span class="pull-right pt-10">
 					<span class="checked-items-count">0</span>
 					{_admin.data_grid.items_count_suffix}
 				</span>
 
-				<ul>
-					{* main bulk checkbox *}
-					<li class="pt-5">
-						<div class="checkbox checkbox-primary">
-							<input type="checkbox" class="main-bulk-checkbox" id="main-bulk-checkbox">
-							<label for="main-bulk-checkbox"></label>
-						</div>
-					</li>
-
-					{* all pages bulk *}
-					<li class="pt-5">
-						{if $grid->isBulkAllPages()}
-							<div class="checkbox checkbox-primary all-pages-checkbox-wrapper">
-								<input n:name="all_pages" class="all-pages-checkbox">
-								<label n:name="all_pages">{_admin.data_grid.all_pages}</label>
+					<ul>
+                        {* main bulk checkbox *}
+						<li class="pt-5">
+							<div class="checkbox checkbox-primary">
+								<input type="checkbox" class="main-bulk-checkbox" id="main-bulk-checkbox">
+								<label for="main-bulk-checkbox"></label>
 							</div>
-						{/if}
-					</li>
+						</li>
 
-					{* bulk actions menu *}
-					<li class="pl-20">
-						<div class="if-visible hover">
-							{var $hasIcons = false}
-							{var $hasDropdown = false}
-							{foreach $grid->getBulkActions() as $action}
-								{if $action['icon']}
-									{var $hasIcons = true}
-								{else}
-									{var $hasDropdown = true}
-								{/if}
-							{/foreach}
-
-							{* icon actions *}
-							{if $hasIcons}
-								<div class="btn-group">
-									{foreach $grid->getBulkActions() as $action}
-										{if $action['icon']}
-											<a class="btn btn-default btn-outline bulk-action-button"
-											   {if $action['action']}href="{$action['action']}"{/if}
-													{if $action['confirm']}
-														{* dont know why, but confirmation dialog on "confirm" class is ignored *}
-														data-confirm
-													{/if}
-													{foreach $action['data'] as $key => $value}
-														data-{$key}="{$value|noescape}"
-													{/foreach}
-											   title="{$action['title']}"
-											>
-												<i class="{$action['icon']}"></i>
-											</a>
-										{/if}
-									{/foreach}
+                        {* all pages bulk *}
+						<li class="pt-5">
+                            {if $grid->isBulkAllPages()}
+								<div class="checkbox checkbox-primary all-pages-checkbox-wrapper">
+									<input n:name="all_pages" class="all-pages-checkbox">
+									<label n:name="all_pages">{_admin.data_grid.all_pages}</label>
 								</div>
-							{/if}
+                            {/if}
+						</li>
 
-							{* dropdown *}
-							{if $hasDropdown}
-								<div class="dropdown inline-block">
-									<button aria-expanded="false" data-toggle="dropdown" class=" btn btn-default btn-outline dropdown-toggle " type="button">
-										Další
-										<span class="caret"></span>
-									</button>
-									<ul role="menu" class="dropdown-menu bulk-menu">
-										{foreach $grid->getBulkActions() as $action}
-											{if !$action['icon']}
-												<li>
-													<a
-															{if $action['action']}href="{$action['action']}"{/if}
-															{if $action['confirm']}
-																{* dont know why, but confirmation dialog on "confirm" class is ignored *}
-																data-confirm
-															{/if}
-															{foreach $action['data'] as $key => $value}
-																data-{$key}="{$value|noescape}"
-															{/foreach}
-													>
-														{$action['title']}
-													</a>
-												</li>
-											{/if}
-										{/foreach}
-									</ul>
-								</div>
-							{/if}
-						</div>
-					</li>
-				</ul>
-				<div class="clearfix"></div>
-			</div>
-		{/if}
+                        {* bulk actions menu *}
+						<li class="pl-20">
+							<div class="if-visible hover">
+                                {var $hasIcons = false}
+                                {var $hasDropdown = false}
+                                {foreach $grid->getBulkActions() as $action}
+                                    {if $action['icon']}
+                                        {var $hasIcons = true}
+                                    {else}
+                                        {var $hasDropdown = true}
+                                    {/if}
+                                {/foreach}
 
-		<div class="row row-eq-height">
-			{formContainer content}
-				{foreach $grid->getRows() as $row}
-					<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
-						<div class="panel panel-default card-view pa-0 product-card">
-							<div class="panel-wrapper collapse in">
-								<div class="panel-body pa-0{if $row->getData('hidden') || $row->getData('greyscale')} greyscale{/if}">
-									<article class="col-item">
-										<div class="photo">
+                                {* icon actions *}
+                                {if $hasIcons}
+									<div class="btn-group">
+                                        {foreach $grid->getBulkActions() as $action}
+                                            {if $action['icon']}
+												<a class="btn btn-default btn-outline bulk-action-button"
+                                                   {if $action['action']}href="{$action['action']}"{/if}
+                                                        {if $action['confirm']}
+                                                            {* dont know why, but confirmation dialog on "confirm" class is ignored *}
+															data-confirm
+                                                        {/if}
+                                                        {foreach $action['data'] as $key => $value}
+															data-{$key}="{$value|noescape}"
+                                                        {/foreach}
+												   title="{$action['title']}"
+												>
+													<i class="{$action['icon']}"></i>
+												</a>
+                                            {/if}
+                                        {/foreach}
+									</div>
+                                {/if}
 
-											{* row if bulk actions are activated *}
-											{if $grid->getBulkActions() && $row->getBulkId()}
-												{formContainer $row->getBulkId()}
-													<div class="left-top-corner">
-														<div class="checkbox checkbox-primary">
-															<input n:name="bulk_id" value="{$row->getBulkId()}">
-															<label n:name="bulk_id"></label>
+                                {* dropdown *}
+                                {if $hasDropdown}
+									<div class="dropdown inline-block">
+										<button aria-expanded="false" data-toggle="dropdown" class=" btn btn-default btn-outline dropdown-toggle " type="button">
+											Další
+											<span class="caret"></span>
+										</button>
+										<ul role="menu" class="dropdown-menu bulk-menu">
+                                            {foreach $grid->getBulkActions() as $action}
+                                                {if !$action['icon']}
+													<li>
+														<a
+                                                                {if $action['action']}href="{$action['action']}"{/if}
+                                                                {if $action['confirm']}
+                                                                    {* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																	data-confirm
+                                                                {/if}
+                                                                {foreach $action['data'] as $key => $value}
+																	data-{$key}="{$value|noescape}"
+                                                                {/foreach}
+														>
+                                                            {$action['title']}
+														</a>
+													</li>
+                                                {/if}
+                                            {/foreach}
+										</ul>
+									</div>
+                                {/if}
+							</div>
+						</li>
+					</ul>
+					<div class="clearfix"></div>
+				</div>
+            {/if}
+
+			<div class="row row-eq-height">
+                {formContainer content}
+                    {foreach $grid->getRows() as $row}
+						<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+							<div class="panel panel-default card-view pa-0 product-card">
+								<div class="panel-wrapper collapse in">
+									<div class="panel-body pa-0{if $row->getData('hidden') || $row->getData('greyscale')} greyscale{/if}">
+										<article class="col-item">
+											<div class="photo">
+
+                                                {* row if bulk actions are activated *}
+                                                {if $grid->getBulkActions() && $row->getBulkId()}
+                                                    {formContainer $row->getBulkId()}
+														<div class="left-top-corner">
+															<div class="checkbox checkbox-primary">
+																<input n:name="bulk_id" value="{$row->getBulkId()}">
+																<label n:name="bulk_id"></label>
+															</div>
 														</div>
+                                                    {/formContainer}
+                                                {/if}
+
+                                                {* favoritize/unfavoritize *}
+                                                {if $row->getData('favorit-url')}
+													<div class="right-top-corner show-on-hover">
+														<a href="{$row->getData('favorit-url')}" class="btn btn-masked btn-default pa-0 ajax" data-loading-anim>
+															<i class="{$row->getData('favorit-icon')}"></i>
+														</a>
 													</div>
-												{/formContainer}
-											{/if}
+                                                {/if}
 
-											{* favoritize/unfavoritize *}
-											{if $row->getData('favorit-url')}
-												<div class="right-top-corner show-on-hover">
-													<a href="{$row->getData('favorit-url')}" class="btn btn-masked btn-default pa-0 ajax" data-loading-anim>
-														<i class="{$row->getData('favorit-icon')}"></i>
-													</a>
-												</div>
-											{/if}
+                                                {* image *}
+												<a href="{$row->getData('link')|noescape}">
+													<img src="{$row->getData('image-placeholder')|noescape}" data-src="{$row->getData('image')|noescape}" n:class="$row->getData('image-class')" alt="{$row->getData('title')|noescape}" width="{$row->getData('image-width')}" height="{$row->getData('image-height')}">
+												</a>
 
-											{* image *}
-											<a href="{$row->getData('link')|noescape}">
-												<img src="{$row->getData('image-placeholder')|noescape}" data-src="{$row->getData('image')|noescape}" n:class="$row->getData('image-class')" alt="{$row->getData('title')|noescape}" width="{$row->getData('image-width')}" height="{$row->getData('image-height')}">
-											</a>
-
-											{* status and visibility *}
-											{var $status = $row->getData('status')}
-											{if $status}
-												{if $row->getData('supplier') || !$status->isApproved() || $row->getData('hidden')}
-													<div class="labels">
-														{* supplier *}
-														{if $row->getData('supplier')}
-															<span class="label label-default label-outline">
+                                                {* status and visibility *}
+                                                {var $status = $row->getData('status')}
+                                                {if $status}
+                                                    {if $row->getData('supplier') || !$status->isApproved() || $row->getData('hidden')}
+														<div class="labels">
+                                                            {* supplier *}
+                                                            {if $row->getData('supplier')}
+																<span class="label label-default label-outline">
 																{$row->getData('supplier')}
 															</span>
-														{/if}
+                                                            {/if}
 
-														{* status *}
-														{if !$status->isApproved()}
-															<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
+                                                            {* status *}
+                                                            {if !$status->isApproved()}
+																<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
 																{_$status->getTitle()}
 															</span>
-														{/if}
+                                                            {/if}
 
-														{* visibility *}
-														{if $row->getData('hidden')}
-															<span class="label label-default{if !$status->isApproved()} ml-5{/if}">Skrytý</span>
-														{/if}
-													</div>
-												{/if}
-											{/if}
-										</div>
-										<div class="info">
+                                                            {* visibility *}
+                                                            {if $row->getData('hidden')}
+																<span class="label label-default{if !$status->isApproved()} ml-5{/if}">Skrytý</span>
+                                                            {/if}
+														</div>
+                                                    {/if}
+                                                {/if}
+											</div>
+											<div class="info">
 
-											{* title *}
-											<h6 class="mb-10">
-												<a href="{$row->getData('link')|noescape}" class="underline-hover">{$row->getData('title')|noescape}</a>
-												{if $row->getData('subtitle')}
-													<br>
-													<em class="weight-300 txt-grey italic">
-														{if is_iterable($row->getData('subtitle'))}
-															{foreach $row->getData('subtitle') as $value}
-																{$value}{sep}, {/sep}
-															{/foreach}
-														{else}
-															{$row->getData('subtitle')}
-														{/if}
-													</em>
-												{/if}
-											</h6>
+                                                {* title *}
+												<h6 class="mb-10">
+													<a href="{$row->getData('link')|noescape}" class="underline-hover">{$row->getData('title')|noescape}</a>
+                                                    {if $row->getData('subtitle')}
+														<br>
+														<em class="weight-300 txt-grey italic">
+                                                            {if is_iterable($row->getData('subtitle'))}
+                                                                {foreach $row->getData('subtitle') as $value}
+                                                                    {$value}{sep}, {/sep}
+                                                                {/foreach}
+                                                            {else}
+                                                                {$row->getData('subtitle')}
+                                                            {/if}
+														</em>
+                                                    {/if}
+												</h6>
 
-											{* code *}
-											<span>
+                                                {* code *}
+												<span>
 												{if $row->getData('code')}
-													{$row->getData('code')}
-												{else}
+                                                    {$row->getData('code')|noescape}
+                                                {else}
 													&nbsp;
-												{/if}
+                                                {/if}
 											</span>
 
-											{* availability *}
-											{if $row->getData('availability')}
-												<br>
-												{$row->getData('availability')}
-											{/if}
+                                                {* availability *}
+                                                {if $row->getData('availability')}
+													<br>
+                                                    {$row->getData('availability')}
+                                                {/if}
 
-											<div class="row no-gutters mt-15">
-												{* buttons *}
-												<div class="col-sm-6">
-													<div class="show-on-hover">
-														<div class="btn-group dropup">
-															{* change status button *}
-															{var $status = $row->getData('status')}
-															{if $status && $row->getData('button-url')}
-																<a href="{$row->getData('button-url')}" class="ajax btn btn-default btn-sm btn-outline pl-15" type="button" data-loading-anim>
-																	{if $status->isApproved()}
-																		<i class="fa fa-thumbs-down"></i>
-																	{else}
-																		<i class="fa fa-thumbs-up"></i>
-																	{/if}
-																</a>
-															{/if}
+												<div class="row no-gutters mt-15">
+                                                    {* buttons *}
+													<div class="col-sm-6">
+														<div class="show-on-hover">
+															<div class="btn-group dropup">
+                                                                {* change status button *}
+                                                                {var $status = $row->getData('status')}
+                                                                {if $status && $row->getData('button-url')}
+																	<a href="{$row->getData('button-url')}" class="ajax btn btn-default btn-sm btn-outline pl-15" type="button" data-loading-anim>
+                                                                        {if $status->isApproved()}
+																			<i class="fa fa-thumbs-down"></i>
+                                                                        {else}
+																			<i class="fa fa-thumbs-up"></i>
+                                                                        {/if}
+																	</a>
+                                                                {/if}
 
-															{* dropup button *}
-															{if $dropdown = $row->getData('dropdown')}
-																<button type="button" class="btn btn-sm btn-default dropdown-toggle dropdown-toggle-split btn-outline pr-10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																	<i class="fa fa-caret-down"></i>
-																</button>
-																{$dropdown->getItemsHtml()|noescape}
-															{/if}
+                                                                {* dropup button *}
+                                                                {if $dropdown = $row->getData('dropdown')}
+																	<button type="button" class="btn btn-sm btn-default dropdown-toggle dropdown-toggle-split btn-outline pr-10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																		<i class="fa fa-caret-down"></i>
+																	</button>
+                                                                    {$dropdown->getItemsHtml()|noescape}
+                                                                {/if}
+															</div>
 														</div>
 													</div>
-												</div>
 
-												{* price *}
-												<div class="col-sm-6 text-right">
+                                                    {* price *}
+													<div class="col-sm-6 text-right">
 													<span class="head-font txt-primary font-16 pt-5 inline-block">
 														{$row->getData('price')|noescape}
 													</span>
+													</div>
 												</div>
 											</div>
-										</div>
-									</article>
+										</article>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				{/foreach}
-			{/formContainer}
-		</div>
-	{/form}
+                    {/foreach}
+                {/formContainer}
+			</div>
+        {/form}
+
+    {else}
+
+        {* no results found *}
+        {if isset($noResultsHtml)}
+            {$noResultsHtml|noescape}
+        {elseif $presenter->isBetaAdmin()}
+			<div class="no-results pt-40 pb-40">
+				<i class="fa fa-frown-o"></i>
+				<p>
+                    {_admin.globals.no_results_found_heading}.<br>
+					Zkuste upravit podmínky pro filtrování.
+				</p>
+			</div>
+        {/if}
+    {/if}
 </div>
 
 
