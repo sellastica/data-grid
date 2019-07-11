@@ -33,7 +33,7 @@ trait TFilterRulesMongoMapper
 	): int
 	{
 		$filter = \Sellastica\DataGrid\Mapping\MongoDB\RulesToMatchConverter::convert($rules);
-		return $this->getCollection()->countDocuments(
+		return $this->getCollection()->count(
 			$filter,
 			$this->getOptions($filter)
 		);

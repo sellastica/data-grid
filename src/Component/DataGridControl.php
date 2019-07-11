@@ -409,11 +409,15 @@ class DataGridControl extends BaseControl
 		$this->template->noResultsHtml = $params['noResultsHtml'] ?? null;
 	}
 
-	public function renderCardView()
+	/**
+	 * @param array $params
+	 */
+	public function renderCardView(array $params = [])
 	{
 		$this->setFile(__DIR__ . '/DataGridControl.cardView.latte');
 		$this->template->grid = $this->dataGrid;
 		$this->template->displayTabs = $this->displayTabs;
+		$this->template->noResultsHtml = $params['noResultsHtml'] ?? null;
 		$this->template->render();
 	}
 }
