@@ -55,7 +55,7 @@ class Helper
 	 * @param iterable $content
 	 * @return \Sellastica\DataGrid\Model\FilterRuleCollection|\Sellastica\DataGrid\Model\FilterRule[]
 	 */
-	public static function 	postDataToFilterRules(
+	public static function postDataToFilterRules(
 		\Sellastica\DataGrid\Component\DataGridControl $dataGrid,
 		bool $allPages = true,
 		iterable $content = []
