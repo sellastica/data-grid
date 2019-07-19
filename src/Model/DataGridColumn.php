@@ -100,15 +100,15 @@ class DataGridColumn
 	/**
 	 * @param string $src
 	 * @param string $alt
-	 * @return $this
+	 * @return Html
 	 */
-	public function addImage(string $src, string $alt = null): DataGridColumn
+	public function addImage(string $src, string $alt = null): Html
 	{
-		$this->content[] = Html::el('img')
-			->src($src)
-			->alt($alt);
+		$this->content[] = $img = Html::el('img')
+			->setAttribute('src', $src)
+			->setAttribute('alt', $alt);
 
-		return $this;
+		return $img;
 	}
 
 	/**
