@@ -219,6 +219,68 @@ class DataGridColumn
 	/**
 	 * @param string $name
 	 * @param string $value
+	 * @param string $ajaxUrl
+	 * @return Html of the INPUT field
+	 */
+	public function addTextInputWithSpinner(
+		string $name,
+		$value,
+		string $ajaxUrl = null
+	): Html
+	{
+		$wrapper = \Nette\Utils\Html::el('div')
+			->setAttribute('class', 'inner-addon right-inner-addon');
+		$i = \Nette\Utils\Html::el('i')
+			->setAttribute('class', 'fa fa-spinner fa-spin');
+		$input = \Nette\Utils\Html::el('input')
+			->setAttribute('type', 'text')
+			->setAttribute('class', 'form-control select-on-focus show-on-hover')
+			->setAttribute('name', $name)
+			->setAttribute('value', $value)
+			->setAttribute('autocomplete', 'off');
+		if ($ajaxUrl) {
+			$input->data('ajax-url', $ajaxUrl);
+		}
+
+		$this->content[] = $wrapper->addHtml($i)->addHtml($input);
+
+		return $input;
+	}
+
+	/**
+	 * @param string $name
+	 * @param string $value
+	 * @param string $ajaxUrl
+	 * @return Html of the INPUT field
+	 */
+	public function addRightAlignedTextInputWithSpinner(
+		string $name,
+		$value,
+		string $ajaxUrl = null
+	): Html
+	{
+		$wrapper = \Nette\Utils\Html::el('div')
+			->setAttribute('class', 'inner-addon left-inner-addon');
+		$i = \Nette\Utils\Html::el('i')
+			->setAttribute('class', 'fa fa-spinner fa-spin');
+		$input = \Nette\Utils\Html::el('input')
+			->setAttribute('type', 'text')
+			->setAttribute('class', 'form-control select-on-focus show-on-hover text-right')
+			->setAttribute('name', $name)
+			->setAttribute('value', $value)
+			->setAttribute('autocomplete', 'off');
+		if ($ajaxUrl) {
+			$input->data('ajax-url', $ajaxUrl);
+		}
+
+		$this->content[] = $wrapper->addHtml($i)->addHtml($input);
+
+		return $input;
+	}
+
+	/**
+	 * @param string $name
+	 * @param string $value
 	 * @return $this
 	 */
 	public function addHiddenInput(string $name, string $value): DataGridColumn
