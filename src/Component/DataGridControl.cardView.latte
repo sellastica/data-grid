@@ -164,7 +164,13 @@
 
 														{* visibility *}
 														{if $row->getData('hidden')}
-															<span class="label label-default{if $status && !$status->isApproved()} ml-5{/if}">Skrytý</span>
+															<span class="label label-default{if $status && !$status->isApproved()} ml-5{/if}">
+																{if $row->getData('hidden-label')}
+																	{$row->getData('hidden-label')}
+																{else}
+																	Skrytý
+																{/if}
+															</span>
 														{/if}
 													</div>
 												{/if}
