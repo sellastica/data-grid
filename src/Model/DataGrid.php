@@ -357,6 +357,11 @@ class DataGrid
 		];
 	}
 
+	public function addBulkActionDivider(): void
+	{
+		$this->bulkActions[] = [];
+	}
+
 	/**
 	 * @return array
 	 */

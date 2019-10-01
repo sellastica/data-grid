@@ -151,23 +151,27 @@
 														</a>
 														<ul class="dropdown-menu dropdown-menu-right animated nonecase-font bulk-menu" id="5cb7fc26e68e2" data-close-on-click="true" data-v-offset="5" role="menu">
                                                             {foreach $grid->getBulkActions() as $action}
-																<li>
-																	<a
-                                                                            {if $action['action']}href="{$action['action']}"{/if}
-                                                                            {if $action['confirm']}
-                                                                                {* dont know why, but confirmation dialog on "confirm" class is ignored *}
-																				data-confirm
+                                                                {if !empty($action)}
+																	<li>
+																		<a
+                                                                                {if $action['action']}href="{$action['action']}"{/if}
+                                                                                {if $action['confirm']}
+                                                                                    {* dont know why, but confirmation dialog on "confirm" class is ignored *}
+																					data-confirm
+                                                                                {/if}
+                                                                                {foreach $action['data'] as $key => $value}
+																					data-{$key}="{$value}"
+                                                                                {/foreach}
+																		>
+                                                                            {if $action['icon']}
+																				<i class="{$action['icon']}"></i>
                                                                             {/if}
-                                                                            {foreach $action['data'] as $key => $value}
-																				data-{$key}="{$value}"
-                                                                            {/foreach}
-																	>
-                                                                        {if $action['icon']}
-																			<i class="{$action['icon']}"></i>
-                                                                        {/if}
-                                                                        {$action['title']}
-																	</a>
-																</li>
+                                                                            {$action['title']}
+																		</a>
+																	</li>
+                                                                {else}
+																	<li class="divider"></li>
+                                                                {/if}
                                                             {/foreach}
 														</ul>
 													</div>
@@ -311,32 +315,60 @@
 </style>
 
 {* form elements change ajax handling *}
-<script>
-	$('.list-table > tbody :input').keyup(function (e) {
-		var keyCode = e.keyCode || e.which;
-		if (keyCode >= 9 && keyCode <= 45) {
-			return;
-		}
+{if $presenter->isBetaAdmin()}
+	<script>
+		$('.list-table > tbody :input').bindWithDelay('keyup', function (e) {
+			var $this = $(this),
+				value = String($this.val());
 
-		var $this = $(this),
-			url = $this.data('ajax-url'),
-			$wrapper = $this.closest('.inner-addon');
-
-		if (url !== undefined) {
-			if ($wrapper.length) {
-				$wrapper.addClass('is-loading');
+			if (value === String($this.data('original-value'))) {
+				return;
 			}
 
-			$.ajax({
-				url: url + '&value=' + $this.val()
-			}).done(function () {
-				if ($wrapper.length) {
-					$wrapper.removeClass('is-loading');
-				}
-			});
-		}
-	});
+			var url = $this.data('ajax-url'),
+				$wrapper = $this.closest('.inner-addon');
 
+			if (url !== undefined) {
+				if ($wrapper.length) {
+					$wrapper.addClass('is-loading');
+				}
+
+				$.ajax({
+					url: url + '&value=' + encodeURIComponent(value)
+				}).done(function () {
+					if ($wrapper.length) {
+						$wrapper.removeClass('is-loading');
+					}
+				}).success(function () {
+					$this.data('original-value', value);
+				});
+			}
+		}, 500);
+	</script>
+{else}
+	<script>
+		$('.list-table > tbody :input').keyup(function (e) {
+			var $this = $(this),
+				value = String($this.val());
+
+			if (value === String($this.data('original-value'))) {
+				return;
+			}
+
+			var url = $this.data('ajax-url');
+			if (url !== undefined) {
+				$.ajax({
+					url: url + '&value=' + encodeURIComponent(value),
+					success: function () {
+						$this.data('original-value', value);
+					}
+				});
+			}
+		});
+	</script>
+{/if}
+
+<script>
 	//grid bulk actions
     {if $presenter->isBetaAdmin()}
 	$(function () {

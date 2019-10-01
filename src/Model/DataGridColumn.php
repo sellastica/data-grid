@@ -58,7 +58,7 @@ class DataGridColumn
 	{
 		$this->content[] = Html::el('span')
 			->setAttribute('class', 'dark-gray txt-medium-grey')
-			->setText($text);
+			->setHtml($text);
 		return $this;
 	}
 
@@ -268,7 +268,8 @@ class DataGridColumn
 			->setAttribute('class', 'form-control select-on-focus show-on-hover text-right')
 			->setAttribute('name', $name)
 			->setAttribute('value', $value)
-			->setAttribute('autocomplete', 'off');
+			->setAttribute('autocomplete', 'off')
+			->data('original-value', $value);
 		if ($ajaxUrl) {
 			$input->data('ajax-url', $ajaxUrl);
 		}

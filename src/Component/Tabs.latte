@@ -2,83 +2,117 @@
 	<div class="tab-struct custom-tab-1">
 		<ul role="tablist" class="tabs nav nav-tabs ml--10">
 
-			{var $tabsCount = sizeof($tabs)}
-			{var $maxTabsCount = 5}
+            {var $tabsCount = sizeof($tabs)}
+            {var $maxTabsCount = 5}
 
-			{if $presenter->isBetaAdmin()}
+            {if $presenter->isBetaAdmin()}
 
-				{* standard tabs *}
-				{foreach $tabs as $key => $tab}
-					{breakIf $tabsCount > $maxTabsCount && $key >= $maxTabsCount - 1}
+				{* has some tab subtitle? *}
+				{var $hasSubtitle = false}
+                {foreach $tabs as $key => $tab}
+                    {breakIf $tabsCount > $maxTabsCount && $key >= $maxTabsCount - 1}
+					{if $tab->getSubtitle()}
+						{var $hasSubtitle = true}
+					{/if}
+                {/foreach}
+
+
+                {* standard tabs *}
+                {foreach $tabs as $key => $tab}
+                    {breakIf $tabsCount > $maxTabsCount && $key >= $maxTabsCount - 1}
 					<li class="tabs-title {if $tab->isActive()} is-active active{/if}" role="presentation">
-						{if $tab->isActive()}
-							<a>
+                        {if $tab->isActive()}
+							<a{if $hasSubtitle} class="pb-10"{/if}>
 								<span aria-selected="true">
 									{$tab->getTitle()|noescape}
+                                    {if $tab->getSubtitle()}
+										<small class="block">
+											{$tab->getSubtitle()|truncate:30}
+										</small>
+									{elseif $hasSubtitle}
+										<small class="block">&nbsp;</small>
+                                    {/if}
 								</span>
 							</a>
-						{else}
-							<a href="{$tab->getUrl()}">{$tab->getTitle()|noescape}</a>
-						{/if}
+                        {else}
+							<a href="{$tab->getUrl()}"{if $hasSubtitle} class="pb-10"{/if}>
+								{$tab->getTitle()|noescape}
+                                {if $tab->getSubtitle()}
+									<small class="block">
+                                        {$tab->getSubtitle()|truncate:30}
+									</small>
+                                {elseif $hasSubtitle}
+									<small class="block">&nbsp;</small>
+                                {/if}
+							</a>
+                        {/if}
 					</li>
-				{/foreach}
+                {/foreach}
 
 
-				{* dropdown tabs *}
-				{if $tabsCount > $maxTabsCount}
+                {* dropdown tabs *}
+                {if $tabsCount > $maxTabsCount}
 
-					{* detect if some tab is active *}
-					{var $dropdownItem = null}
-					{foreach $tabs as $key => $tab}
-						{continueIf $key < $maxTabsCount - 1}
-						{if $tab->isActive()}
-							{var $dropdownItem = $tab->getTitle()}
-						{/if}
-					{/foreach}
+                    {* detect if some tab is active *}
+                    {var $dropdownItem = null}
+                    {foreach $tabs as $key => $tab}
+                        {continueIf $key < $maxTabsCount - 1}
+                        {if $tab->isActive()}
+                            {var $dropdownItem = $tab->getTitle()}
+                        {/if}
+                    {/foreach}
 
 					<li class="dropdown{if $dropdownItem} active{/if}" role="presentation">
-						<a data-toggle="dropdown" class="dropdown-toggle" id="another-tabs" href="#" aria-expanded="false">
-							{$dropdownItem ?: 'Další...'}
+						<a data-toggle="dropdown" class="dropdown-toggle{if $hasSubtitle} pb-10{/if}" id="another-tabs" href="#" aria-expanded="false">
+                            {$dropdownItem ?: 'Další...'}
 							<span class="caret"></span>
+                            {if $hasSubtitle}
+								<small class="block">&nbsp;</small>
+							{/if}
 						</a>
 						<ul id="another-tabs-content" class="dropdown-menu">
-							{foreach $tabs as $key => $tab}
-								{continueIf $key < $maxTabsCount - 1}
+                            {foreach $tabs as $key => $tab}
+                                {continueIf $key < $maxTabsCount - 1}
 								<li{if $tab->isActive()} class="active"{/if}>
 									<a id="another-tab-{$key}" role="tab" href="{$tab->getUrl()}" aria-expanded="true">
-										{$tab->getTitle()}
+                                        {$tab->getTitle()}
+                                        {if $tab->getSubtitle()}
+											<small class="block">
+												{$tab->getSubtitle()|truncate:40}
+											</small>
+                                        {/if}
 									</a>
 								</li>
-							{/foreach}
+                            {/foreach}
 						</ul>
 					</li>
-				{/if}
+                {/if}
 
-			{else}
-				{foreach $tabs as $tab}
+            {else}
+                {foreach $tabs as $tab}
 					<li class="tabs-title {if $tab->isActive()} is-active active{/if}{if $tab->isSaveable()} save{/if}" role="presentation">
-						{if $tab->isActive()}
-							{if $tab->isSaveable()}
+                        {if $tab->isActive()}
+                            {if $tab->isSaveable()}
 								<a data-toggle="save-search-form">
 									<i class="fa fa-bookmark-o"></i>
-									{_admin.globals.buttons.save}...
+                                    {_admin.globals.buttons.save}...
 								</a>
-							{else}
+                            {else}
 								<a>
 								<span aria-selected="true">
 									{$tab->getTitle()}
 								</span>
 								</a>
-							{/if}
-							{if $tab->isDeletable()}
+                            {/if}
+                            {if $tab->isDeletable()}
 								<a n:href="remove id => $tab->getId()" class="tab-action">&times;</a>
-							{/if}
-						{else}
+                            {/if}
+                        {else}
 							<a href="{$tab->getUrl()}">{$tab->getTitle()}</a>
-						{/if}
+                        {/if}
 					</li>
-				{/foreach}
-			{/if}
+                {/foreach}
+            {/if}
 		</ul>
 	</div>
 {/if}

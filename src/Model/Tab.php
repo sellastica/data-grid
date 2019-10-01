@@ -7,6 +7,8 @@ class Tab
 	private $id;
 	/** @var string|\Nette\Utils\Html */
 	private $title;
+	/** @var string|\Nette\Utils\Html|null */
+	private $subtitle;
 	/** @var string|null */
 	private $url;
 	/** @var bool */
@@ -49,6 +51,22 @@ class Tab
 	public function getTitle()
 	{
 		return $this->title;
+	}
+
+	/**
+	 * @return \Nette\Utils\Html|string|null
+	 */
+	public function getSubtitle()
+	{
+		return $this->subtitle;
+	}
+
+	/**
+	 * @param \Nette\Utils\Html|string|null $subtitle
+	 */
+	public function setSubtitle($subtitle): void
+	{
+		$this->subtitle = $subtitle;
 	}
 
 	/**

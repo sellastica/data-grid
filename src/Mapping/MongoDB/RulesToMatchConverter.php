@@ -39,7 +39,7 @@ class RulesToMatchConverter
 					throw new \Nette\NotImplementedException();
 					break;
 				case \Sellastica\DataGrid\Model\FilterRule::STRING:
-					$match[$column] = new \MongoDB\BSON\Regex($rule->getValue(), 'i');
+					$match[$column] = new \MongoDB\BSON\Regex(preg_quote($rule->getValue()), 'i');
 					break;
 				default:
 					break;
@@ -62,7 +62,7 @@ class RulesToMatchConverter
 					throw new \Nette\NotImplementedException();
 					break;
 				case \Sellastica\DataGrid\Model\FilterRule::STRING:
-					$or[] = [$column => new \MongoDB\BSON\Regex($rule->getValue(), 'i')];
+					$or[] = [$column => new \MongoDB\BSON\Regex(preg_quote($rule->getValue()), 'i')];
 					break;
 				default:
 					break;

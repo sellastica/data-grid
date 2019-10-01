@@ -4,6 +4,14 @@
 {/if}
 
 
+{* notice *}
+{if $notice}
+	<div class="alert alert-info mt-10 mr--10 mb-10 ml--10">
+		{$notice|noescape}
+	</div>
+{/if}
+
+
 {* bulk actions *}
 <div class="data-grid data-grid-card-view">
     {if $grid->hasRows()}
@@ -146,34 +154,34 @@
 
                                                 {* status and visibility *}
                                                 {var $status = $row->getData('status')}
-												{if $row->getData('supplier') || ($status && !$status->isApproved()) || $row->getData('hidden')}
+                                                {if $row->getData('supplier') || ($status && !$status->isApproved()) || $row->getData('hidden')}
 													<div class="labels">
-														{* supplier *}
-														{if $row->getData('supplier')}
+                                                        {* supplier *}
+                                                        {if $row->getData('supplier')}
 															<span class="label label-default label-outline">
-															{$row->getData('supplier')}
-														</span>
-														{/if}
+																{$row->getData('supplier')}
+															</span>
+                                                        {/if}
 
-														{* status *}
-														{if $status && !$status->isApproved()}
-															<span class="label label-{if $status->isApproved()}success{elseif $status->isRejected()}danger{else}default{/if}">
+                                                        {* status *}
+                                                        {if $status && !$status->isApproved()}
+															<span class="label label-{if $status->isRejected()}danger{else}primary{/if}">
 																{_$status->getTitle()}
 															</span>
-														{/if}
+                                                        {/if}
 
-														{* visibility *}
-														{if $row->getData('hidden')}
+                                                        {* visibility *}
+                                                        {if $row->getData('hidden')}
 															<span class="label label-default{if $status && !$status->isApproved()} ml-5{/if}">
 																{if $row->getData('hidden-label')}
-																	{$row->getData('hidden-label')}
-																{else}
+                                                                    {$row->getData('hidden-label')}
+                                                                {else}
 																	Skrytý
-																{/if}
+                                                                {/if}
 															</span>
-														{/if}
+                                                        {/if}
 													</div>
-												{/if}
+                                                {/if}
 											</div>
 											<div class="info">
 
@@ -220,9 +228,9 @@
                                                                     {if $status && $row->getData('button-url')}
 																		<a href="{$row->getData('button-url')}" class="ajax btn btn-default btn-sm btn-outline pl-15" type="button" data-loading-anim>
                                                                             {if $status->isApproved()}
-																				<i class="fa fa-thumbs-down"></i>
+																				<i class="fa fa-thumbs-down w-14px"></i>
                                                                             {else}
-																				<i class="fa fa-thumbs-up"></i>
+																				<i class="fa fa-thumbs-up w-14px"></i>
                                                                             {/if}
 																		</a>
                                                                     {/if}
@@ -404,9 +412,9 @@
 			var $this = $(this),
 				$actionItems = $('*[data-all-pages="0"]');
 			if ($this.prop('checked')) {
-				$actionItems.addClass('disabled');
+				$actionItems.hide();
 			} else {
-				$actionItems.removeClass('disabled');
+				$actionItems.fadeIn();
 			}
 		});
 	});

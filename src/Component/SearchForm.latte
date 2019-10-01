@@ -4,7 +4,7 @@
 
 	{* beta admin *}
 	{form searchForm}
-		<div class="mb-10 pull-right datagrid-search">
+		<div class="mt-5 pull-right datagrid-search">
 			{* search input *}
 			{if $control->displaySearchInput()}
 				{var $style = !$displayCancelButton ? 'display:none' : ''}
@@ -17,11 +17,11 @@
 
 					{* search button *}
 					{if !$displayCancelButton}
-						<a class="btn btn-default btn-outline" id="datagrid-search-button">
+						<a class="btn btn-default btn-outline" id="datagrid-search-button" data-loading-text-none>
 							<i class="fa fa-search"></i>
 						</a>
 					{else}
-						<a n:href="cancelSearch!" class="btn btn-default btn-outline">
+						<a n:href="cancelSearch!" class="btn btn-default btn-outline" data-loading-text-none>
 							<i class="fa fa-times"></i>
 						</a>
 					{/if}

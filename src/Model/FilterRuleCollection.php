@@ -132,11 +132,11 @@ class FilterRuleCollection implements \IteratorAggregate, \ArrayAccess, \Countab
 	public function getActiveRules($operationType = null): FilterRuleCollection
 	{
 		$collection = new self();
-		foreach ($this->rules as $key => $criterion) {
-			if (!$criterion->isDefault()
-				&& (!isset($operationType) || $criterion->isOperationType($operationType))
+		foreach ($this->rules as $key => $rule) {
+			if (!$rule->isDefault()
+				&& (!isset($operationType) || $rule->isOperationType($operationType))
 			) {
-				$collection->addRule($criterion);
+				$collection->addRule($rule);
 			}
 		}
 

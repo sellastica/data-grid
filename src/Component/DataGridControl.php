@@ -53,6 +53,8 @@ class DataGridControl extends BaseControl
 	private $displaySaveSearchForm = true;
 	/** @var \Nette\Localization\ITranslator */
 	private $translator;
+	/** @var string|\Nette\Utils\Html|null */
+	private $notice;
 
 
 	/**
@@ -399,6 +401,14 @@ class DataGridControl extends BaseControl
 	}
 
 	/**
+	 * @param \Nette\Utils\Html|string|null $notice
+	 */
+	public function setNotice($notice): void
+	{
+		$this->notice = $notice;
+	}
+
+	/**
 	 * @param array $params
 	 */
 	protected function beforeRender(array $params = [])
@@ -418,6 +428,7 @@ class DataGridControl extends BaseControl
 		$this->template->grid = $this->dataGrid;
 		$this->template->displayTabs = $this->displayTabs;
 		$this->template->noResultsHtml = $params['noResultsHtml'] ?? null;
+		$this->template->notice = $this->notice;
 		$this->template->render();
 	}
 }
