@@ -7,7 +7,7 @@
 {* notice *}
 {if $notice}
 	<div class="alert alert-info mt-10 mr--10 mb-10 ml--10">
-		{$notice|noescape}
+        {$notice|noescape}
 	</div>
 {/if}
 
@@ -154,7 +154,7 @@
 
                                                 {* status and visibility *}
                                                 {var $status = $row->getData('status')}
-                                                {if $row->getData('supplier') || ($status && !$status->isApproved()) || $row->getData('hidden')}
+                                                {if $row->getData('supplier') || ($status && !$status->isApproved()) || $row->getData('hidden') || $row->getData('removed')}
 													<div class="labels">
                                                         {* supplier *}
                                                         {if $row->getData('supplier')}
@@ -172,12 +172,19 @@
 
                                                         {* visibility *}
                                                         {if $row->getData('hidden')}
-															<span class="label label-default{if $status && !$status->isApproved()} ml-5{/if}">
+															<span class="label label-default">
 																{if $row->getData('hidden-label')}
                                                                     {$row->getData('hidden-label')}
                                                                 {else}
 																	Skrytý
                                                                 {/if}
+															</span>
+                                                        {/if}
+
+                                                        {* removed *}
+                                                        {if $row->getData('removed')}
+															<span class="label label-default">
+																Vyřazený
 															</span>
                                                         {/if}
 													</div>
