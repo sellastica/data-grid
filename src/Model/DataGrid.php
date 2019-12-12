@@ -339,13 +339,15 @@ class DataGrid
 	 * @param bool $confirm
 	 * @param array $dataAttributes
 	 * @param string|null $icon
+	 * @param string|null $linkClass
 	 */
 	public function addBulkAction(
 		string $title,
 		string $action = null,
 		bool $confirm = false,
 		array $dataAttributes = [],
-		string $icon = null
+		string $icon = null,
+		string $linkClass = null
 	)
 	{
 		$this->bulkActions[] = [
@@ -354,6 +356,7 @@ class DataGrid
 			'confirm' => $confirm,
 			'data' => $dataAttributes,
 			'icon' => $icon,
+			'linkClass' => $linkClass,
 		];
 	}
 

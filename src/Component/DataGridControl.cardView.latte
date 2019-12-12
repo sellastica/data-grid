@@ -92,6 +92,7 @@
                                                 {if !$action['icon']}
 													<li>
 														<a
+																{if $action['linkClass']}class="{$action['linkClass']}"{/if}
                                                                 {if $action['action']}href="{$action['action']}"{/if}
                                                                 {if $action['confirm']}
                                                                     {* dont know why, but confirmation dialog on "confirm" class is ignored *}
@@ -149,7 +150,7 @@
 
                                                 {* image *}
 												<a href="{$row->getData('link')|noescape}">
-													<img src="{$row->getData('image-placeholder')|noescape}" data-src="{$row->getData('image')|noescape}" n:class="$row->getData('image-class')" alt="{$row->getData('title')|noescape}" width="{$row->getData('image-width')}" height="{$row->getData('image-height')}">
+													<img data-src-placeholder="{$row->getData('image-placeholder')|noescape}" src="{$row->getData('image')|noescape}" n:class="$row->getData('image-class')" alt="{$row->getData('title')|noescape}" width="{$row->getData('image-width')}" height="{$row->getData('image-height')}">
 												</a>
 
                                                 {* status and visibility *}
@@ -197,6 +198,9 @@
 													<a href="{$row->getData('link')|noescape}" class="underline-hover">{$row->getData('title')|noescape}</a>
                                                     {if $row->getData('subtitle')}
 														<br>
+														{if $row->getData('master')}
+															<span class="label label-primary">Hlavní</span>
+														{/if}
 														<span class="weight-300 txt-grey">
                                                             {if is_iterable($row->getData('subtitle'))}
                                                                 {foreach $row->getData('subtitle') as $value}
@@ -292,137 +296,3 @@
 
 {* pagination *}
 {control pagination}
-
-
-<script>
-	$(function () {
-		function toggleBulkActions($wrapper, show) {
-			if (show) {
-				$wrapper.addClass('bulk-actions-active');
-				$wrapper.find('.bulk-actions').slideDown(200);
-			} else {
-				$wrapper.removeClass('bulk-actions-active');
-				$wrapper.find('.bulk-actions').slideUp(200);
-			}
-		}
-
-		function updateItemsCount($wrapper) {
-			var $this = $(this),
-				$itemsCount = $wrapper.find('.checked-items-count'),
-				$allPagesCheckbox = $wrapper.find('.all-pages-checkbox');
-
-			if ($allPagesCheckbox.is(':checked')) {
-				$itemsCount.text($('.pagination').data('items-count'));
-			} else {
-				$itemsCount.text($wrapper.find('.bulk-checkbox:checked').length);
-			}
-		}
-
-		$('.main-bulk-checkbox').click(function () {
-			var $this = $(this),
-				$checked = $this.prop('checked'),
-				$wrapper = $this.closest('.data-grid'),
-				$checkboxes = $wrapper.find('.bulk-checkbox'),
-				$allPagesWrapper = $wrapper.find('.all-pages-checkbox-wrapper');
-
-			if ($checked === true) {
-				$checkboxes.each(function () {
-					$(this).prop('checked', true);
-				});
-				$allPagesWrapper.show();
-			} else {
-				$checkboxes.each(function () {
-					$(this).prop('checked', false);
-				});
-				$allPagesWrapper.hide();
-			}
-
-			toggleBulkActions($wrapper, $checked);
-			updateItemsCount($wrapper);
-		});
-
-		$('.bulk-checkbox').click(function () {
-			var $this = $(this),
-				$wrapper = $this.closest('.data-grid'),
-				$checkboxes = $wrapper.find('.bulk-checkbox'),
-				$checkedCheckboxes = $wrapper.find('.bulk-checkbox:checked'),
-				$mainCheckbox = $wrapper.find('.main-bulk-checkbox'),
-				$allPagesCheckboxWrapper = $wrapper.find('.all-pages-checkbox-wrapper'),
-				$allPagesCheckbox = $allPagesCheckboxWrapper.find('.all-pages-checkbox');
-
-			if ($checkboxes.length === $checkedCheckboxes.length) { //all checked
-				$mainCheckbox.prop('checked', true);
-				$allPagesCheckboxWrapper.show();
-			} else {
-				$mainCheckbox.prop('checked', false);
-				$allPagesCheckbox.prop('checked', false);
-				$allPagesCheckboxWrapper.hide();
-			}
-
-			toggleBulkActions($wrapper, $checkedCheckboxes.length > 0);
-			updateItemsCount($wrapper);
-		});
-
-		$('.all-pages-checkbox-wrapper').click(function () {
-			updateItemsCount($(this).closest('.data-grid'));
-		});
-
-		//bulk actions dropdown action link
-		$('.bulk-menu > li > a, .bulk-action-button').click(function (e) {
-			e.preventDefault();
-			var $this = $(this);
-
-			if ($this.attr('href') === undefined) {
-				return;
-			}
-
-			//confirmation dialog
-			if ($this.attr('data-confirm') !== undefined) {
-				if (!window.confirm('Jste si jistý?')) {
-					return false;
-				}
-			}
-
-			var $form = $('#data-grid-content-form'),
-				$formAction = $('#data-grid-bulk-action');
-
-			if ($formAction.length) {
-				$formAction.val($this.attr('href'));
-			}
-
-			$form.submit();
-		});
-
-		//bulk actions modal form
-		$('.bulk-actions-form').submit(function (e) {
-			var $form = $(this),
-				$allPagesCheckbox = $('.all-pages-checkbox'),
-				$checked = $('.bulk-checkbox:checked');
-
-			$form.append($('<input/>', {
-				type: 'hidden',
-				name: 'all_pages',
-				value: $allPagesCheckbox.is(':checked') ? 1 : 0
-			}));
-			$.each($checked, function () {
-				$form.append($('<input/>', {
-					type: 'hidden',
-					name: 'bulk_id[]',
-					value: $(this).val()
-				}));
-			});
-
-			return true;
-		});
-
-		$('.all-pages-checkbox').click(function () {
-			var $this = $(this),
-				$actionItems = $('*[data-all-pages="0"]');
-			if ($this.prop('checked')) {
-				$actionItems.hide();
-			} else {
-				$actionItems.fadeIn();
-			}
-		});
-	});
-</script>
